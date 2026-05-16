@@ -9,19 +9,23 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import type { BlogFilters } from '@/lib/types/blogs';
+import type { StatisticFilters } from '@/lib/types/statistics';
 import type { ReportAuthor } from '@/lib/types/reports';
 import { Search, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { fetchCategories, type Category } from '@/lib/api/categories';
 
-interface BlogFiltersProps {
-  filters: BlogFilters;
-  onFiltersChange: (filters: BlogFilters) => void;
+interface StatisticsFiltersProps {
+  filters: StatisticFilters;
+  onFiltersChange: (filters: StatisticFilters) => void;
   authors?: ReportAuthor[];
 }
 
-export function BlogFiltersComponent({ filters, onFiltersChange, authors = [] }: BlogFiltersProps) {
+export function StatisticsFiltersComponent({
+  filters,
+  onFiltersChange,
+  authors = [],
+}: StatisticsFiltersProps) {
   const [searchInput, setSearchInput] = useState(filters.search || '');
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
@@ -63,7 +67,7 @@ export function BlogFiltersComponent({ filters, onFiltersChange, authors = [] }:
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search blog posts by title, excerpt, or tags..."
+            placeholder="Search statistic posts by title, excerpt, or tags..."
             value={searchInput}
             onChange={e => setSearchInput(e.target.value)}
             className="pl-10"
@@ -79,7 +83,7 @@ export function BlogFiltersComponent({ filters, onFiltersChange, authors = [] }:
           onValueChange={value =>
             onFiltersChange({
               ...filters,
-              status: value === 'all' ? undefined : (value as BlogFilters['status']),
+              status: value === 'all' ? undefined : (value as StatisticFilters['status']),
               page: 1,
             })
           }

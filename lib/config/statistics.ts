@@ -1,14 +1,22 @@
-// Import statistic categories for reuse
-import { STATISTIC_CATEGORIES } from './statistics';
+// Statistic categories (expand as needed)
+export const STATISTIC_CATEGORIES = [
+  'Industry News',
+  'Market Analysis',
+  'Research Insights',
+  'Company Profiles',
+  'Technology Trends',
+  'Regulatory Updates',
+  'Case Studies',
+  'How-To Guides',
+  'Interviews',
+  'Opinion',
+] as const;
 
-// Press Release categories (reusing statistic categories)
-export { STATISTIC_CATEGORIES as PRESS_RELEASE_CATEGORIES };
-
-// Legacy alias for backward compatibility
-export { STATISTIC_CATEGORIES as BLOG_CATEGORIES };
+// Legacy alias
+export const BLOG_CATEGORIES = STATISTIC_CATEGORIES;
 
 // Popular tags for quick selection
-export const POPULAR_PRESS_RELEASE_TAGS = [
+export const POPULAR_TAGS = [
   'healthcare',
   'market research',
   'pharmaceuticals',
@@ -23,8 +31,8 @@ export const POPULAR_PRESS_RELEASE_TAGS = [
   'startups',
 ] as const;
 
-// Press Release status labels with descriptions
-export const PRESS_RELEASE_STATUS_CONFIG = {
+// Statistic status labels with descriptions
+export const STATISTIC_STATUS_CONFIG = {
   draft: {
     label: 'Draft',
     description: 'Not visible to public. Only you can see this.',
@@ -42,22 +50,29 @@ export const PRESS_RELEASE_STATUS_CONFIG = {
   },
 } as const;
 
+// Legacy alias
+export const BLOG_STATUS_CONFIG = STATISTIC_STATUS_CONFIG;
+
 // Workflow transitions
-export const PRESS_RELEASE_WORKFLOW_TRANSITIONS = {
+export const WORKFLOW_TRANSITIONS = {
   draft: ['review', 'published'], // From draft can go to review or directly publish (admin only)
   review: ['draft', 'published'], // From review can go back to draft or publish
   published: ['draft'], // From published can only go back to draft
 } as const;
 
 // Reading time calculation
-export const PRESS_RELEASE_WORDS_PER_MINUTE = 200;
+export const WORDS_PER_MINUTE = 200;
 
 // Pagination defaults
-export const PRESS_RELEASES_PER_PAGE = 10;
-export const MAX_PRESS_RELEASES_PER_PAGE = 50;
+export const STATISTICS_PER_PAGE = 10;
+export const MAX_STATISTICS_PER_PAGE = 50;
+
+// Legacy aliases
+export const BLOGS_PER_PAGE = STATISTICS_PER_PAGE;
+export const MAX_BLOGS_PER_PAGE = MAX_STATISTICS_PER_PAGE;
 
 // Image requirements
-export const PRESS_RELEASE_FEATURED_IMAGE_CONFIG = {
+export const FEATURED_IMAGE_CONFIG = {
   maxSize: 5 * 1024 * 1024, // 5MB
   acceptedFormats: ['image/jpeg', 'image/png', 'image/webp'],
   recommendedDimensions: {
@@ -66,13 +81,13 @@ export const PRESS_RELEASE_FEATURED_IMAGE_CONFIG = {
   },
 };
 
-// Excerpt length limits (from API spec)
-export const PRESS_RELEASE_EXCERPT_MIN_LENGTH = 50;
-export const PRESS_RELEASE_EXCERPT_MAX_LENGTH = 500;
+// Excerpt length limits
+export const EXCERPT_MIN_LENGTH = 50;
+export const EXCERPT_MAX_LENGTH = 300;
 
-// Title length limits (from API spec)
-export const PRESS_RELEASE_TITLE_MIN_LENGTH = 10;
-export const PRESS_RELEASE_TITLE_MAX_LENGTH = 200;
+// Title length limits
+export const TITLE_MIN_LENGTH = 10;
+export const TITLE_MAX_LENGTH = 100;
 
-// Content length limits (from API spec)
-export const PRESS_RELEASE_CONTENT_MIN_LENGTH = 100;
+// Content length limits
+export const CONTENT_MIN_LENGTH = 200;

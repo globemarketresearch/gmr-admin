@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { BlogFiltersComponent } from '@/components/blogs/blog-filters';
-import { BlogList } from '@/components/blogs/blog-list';
+import { StatisticsFiltersComponent } from '@/components/statistics/statistics-filters';
+import { StatisticsList } from '@/components/statistics/statistics-list';
 import {
   Pagination,
   PaginationContent,
@@ -14,7 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { useBlogs } from '@/hooks/use-blogs';
+import { useStatistics } from '@/hooks/use-statistics';
 import { useAuth } from '@/contexts/auth-context';
 import { Plus, RefreshCw, Trash2 } from 'lucide-react';
 import {
@@ -28,18 +28,18 @@ import {
 import { toast } from 'sonner';
 import { fetchAuthors } from '@/lib/api/authors';
 import type { ReportAuthor } from '@/lib/types/reports';
-import type { BlogFilters } from '@/lib/types/blogs';
+import type { StatisticFilters } from '@/lib/types/statistics';
 
-export default function BlogPage() {
+export default function StatisticsPage() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { user } = useAuth();
   const initialPage = Number(searchParams.get('page')) > 0 ? Number(searchParams.get('page')) : 1;
-  const [filters, setFilters] = useState<BlogFilters>({ page: initialPage });
+  const [filters, setFilters] = useState<StatisticFilters>({ page: initialPage });
   const [authors, setAuthors] = useState<ReportAuthor[]>([]);
   const {
-    blogs,
+    statistics,
     total,
     totalPages,
     currentPage,
@@ -47,13 +47,13 @@ export default function BlogPage() {
     refetch,
     setFilters: updateFilters,
     softDelete,
-  } = useBlogs(filters);
+  } = useStatistics(filters);
   const [deleteDialog, setDeleteDialog] = useState<{
     open: boolean;
-    blogId: string | null;
+    statisticId: string | null;
   }>({
     open: false,
-    blogId: null,
+    statisticId: null,
   });
 
   const syncPageParam = (page: number) => {
@@ -62,7 +62,7 @@ export default function BlogPage() {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  const applyFilters = (nextFilters: BlogFilters) => {
+  const applyFilters = (nextFilters: StatisticFilters) => {
     const normalizedFilters = { ...nextFilters, page: nextFilters.page ?? 1 };
     setFilters(normalizedFilters);
     updateFilters(normalizedFilters);
@@ -99,14 +99,14 @@ export default function BlogPage() {
   }, [currentPage, pathname, router, searchParams]);
 
   const handleDelete = async () => {
-    if (!deleteDialog.blogId) return;
+    if (!deleteDialog.statisticId) return;
 
     try {
-      await softDelete(deleteDialog.blogId);
-      toast.success('Blog moved to trash successfully');
-      setDeleteDialog({ open: false, blogId: null });
+      await softDelete(deleteDialog.statisticId);
+      toast.success('Statistic moved to trash successfully');
+      setDeleteDialog({ open: false, statisticId: null });
     } catch {
-      toast.error('Failed to move blog to trash');
+      toast.error('Failed to move statistic to trash');
     }
   };
 
@@ -117,8 +117,8 @@ export default function BlogPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Blog Posts</h1>
-          <p className="text-muted-foreground mt-2">Manage blog content ({total} total)</p>
+          <h1 className="text-3xl font-bold">Statistics Posts</h1>
+          <p className="text-muted-foreground mt-2">Manage statistics content ({total} total)</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={refetch}>
@@ -127,7 +127,7 @@ export default function BlogPage() {
           </Button>
           {canCreateEdit && (
             <Button variant="outline" size="sm" asChild>
-              <Link href="/blog/trash">
+              <Link href="/statistics/trash">
                 <Trash2 className="mr-2 h-4 w-4" />
                 View Trash
               </Link>
@@ -135,7 +135,7 @@ export default function BlogPage() {
           )}
           {canCreateEdit && (
             <Button asChild>
-              <Link href="/blog/new">
+              <Link href="/statistics/new">
                 <Plus className="mr-2 h-4 w-4" />
                 Create Post
               </Link>
@@ -145,7 +145,7 @@ export default function BlogPage() {
       </div>
 
       {/* Filters */}
-      <BlogFiltersComponent
+      <StatisticsFiltersComponent
         filters={filters}
         onFiltersChange={newFilters => {
           applyFilters(newFilters);
@@ -153,11 +153,13 @@ export default function BlogPage() {
         authors={authors}
       />
 
-      {/* Blog List */}
-      <BlogList
-        blogs={blogs}
+      {/* Statistics List */}
+      <StatisticsList
+        statistics={statistics}
         isLoading={isLoading}
-        onSoftDelete={canCreateEdit ? id => setDeleteDialog({ open: true, blogId: id }) : undefined}
+        onSoftDelete={
+          canCreateEdit ? id => setDeleteDialog({ open: true, statisticId: id }) : undefined
+        }
       />
 
       {/* Pagination */}
@@ -207,20 +209,20 @@ export default function BlogPage() {
       {/* Delete Confirmation Dialog */}
       <Dialog
         open={deleteDialog.open}
-        onOpenChange={open => setDeleteDialog({ open, blogId: null })}
+        onOpenChange={open => setDeleteDialog({ open, statisticId: null })}
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Move Blog to Trash</DialogTitle>
+            <DialogTitle>Move Statistic to Trash</DialogTitle>
             <DialogDescription>
-              Are you sure you want to move this blog post to trash? You can restore it later from
-              the trash.
+              Are you sure you want to move this statistic post to trash? You can restore it later
+              from the trash.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button
               variant="outline"
-              onClick={() => setDeleteDialog({ open: false, blogId: null })}
+              onClick={() => setDeleteDialog({ open: false, statisticId: null })}
             >
               Cancel
             </Button>

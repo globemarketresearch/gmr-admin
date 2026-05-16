@@ -58,26 +58,26 @@ export const navigationItems: NavigationItem[] = [
     ],
   },
   {
-    title: 'Blog',
-    href: '/blog',
+    title: 'Statistics',
+    href: '/statistics',
     icon: PenSquare,
     roles: ['admin', 'editor'],
     children: [
       {
         title: 'All Posts',
-        href: '/blog',
+        href: '/statistics',
         icon: PenSquare,
         roles: ['admin', 'editor'],
       },
       {
         title: 'Create Post',
-        href: '/blog/new',
+        href: '/statistics/new',
         icon: PenSquare,
         roles: ['admin', 'editor'],
       },
       {
         title: 'Trash',
-        href: '/blog/trash',
+        href: '/statistics/trash',
         icon: Trash2,
         roles: ['admin', 'editor'],
       },

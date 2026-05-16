@@ -3,6 +3,10 @@ export type ActivityType =
   | 'report_created'
   | 'report_updated'
   | 'report_deleted'
+  | 'statistics_published'
+  | 'statistics_created'
+  | 'statistics_updated'
+  | 'statistics_deleted'
   | 'blog_published'
   | 'blog_created'
   | 'blog_updated'
@@ -66,13 +70,16 @@ export interface ReportStats {
   topPerformers?: TopReport[];
 }
 
-export interface BlogStats {
+export interface StatisticsStats {
   total: number;
   published: number;
   draft: number;
   review: number;
   change: number;
 }
+
+// Legacy alias
+export type BlogStats = StatisticsStats;
 
 export interface PressReleaseStats {
   total: number;
@@ -103,7 +110,8 @@ export interface LeadStats {
 
 export interface ContentCreationStats {
   reportsThisMonth: number;
-  blogsThisMonth: number;
+  statisticsThisMonth: number;
+  blogsThisMonth: number; // legacy alias
   pressReleasesThisMonth: number;
 }
 
@@ -114,7 +122,8 @@ export interface PerformanceStats {
 
 export interface DashboardStats {
   reports: ReportStats;
-  blogs: BlogStats;
+  statistics: StatisticsStats;
+  blogs: StatisticsStats; // legacy alias
   pressReleases: PressReleaseStats;
   users?: UserStats; // Only for admins
   leads: LeadStats;

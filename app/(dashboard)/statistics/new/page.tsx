@@ -2,19 +2,19 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { BlogForm } from '@/components/blogs/blog-form';
-import { useBlog } from '@/hooks/use-blog';
+import { StatisticsForm } from '@/components/statistics/statistics-form';
+import { useStatistic } from '@/hooks/use-statistic';
 import { useAuth } from '@/contexts/auth-context';
 
-export default function CreateBlogPage() {
+export default function CreateStatisticPage() {
   const { user } = useAuth();
   const router = useRouter();
-  const { saveBlog, isSaving } = useBlog();
+  const { saveStatistic, isSaving } = useStatistic();
 
   useEffect(() => {
     // Redirect non-authorized users
     if (user && user.role !== 'admin' && user.role !== 'editor') {
-      router.push('/blog');
+      router.push('/statistics');
     }
   }, [user, router]);
 
@@ -25,13 +25,13 @@ export default function CreateBlogPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Create New Blog Post</h1>
-        <p className="text-muted-foreground mt-2">Write and publish a new blog article</p>
+        <h1 className="text-3xl font-bold">Create New Statistic Post</h1>
+        <p className="text-muted-foreground mt-2">Write and publish a new statistic article</p>
       </div>
 
-      <BlogForm
+      <StatisticsForm
         onSubmit={async data => {
-          await saveBlog(null, data);
+          await saveStatistic(null, data);
         }}
         isSaving={isSaving}
       />

@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { TiptapEditor } from '@/components/reports/tiptap-editor';
-import { AuthorSelector } from '@/components/blogs/author-selector';
+import { AuthorSelector } from '@/components/statistics/author-selector';
 import { fetchCategories, type Category } from '@/lib/api/categories';
 import {
   PRESS_RELEASE_TITLE_MAX_LENGTH,

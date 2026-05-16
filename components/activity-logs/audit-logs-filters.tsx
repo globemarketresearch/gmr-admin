@@ -38,10 +38,10 @@ const ACTION_OPTIONS: { value: AuditLogAction | ''; label: string; group?: strin
   { value: 'author.create', label: 'Author Created', group: 'Author' },
   { value: 'author.update', label: 'Author Updated', group: 'Author' },
   { value: 'author.delete', label: 'Author Deleted', group: 'Author' },
-  { value: 'blog.create', label: 'Blog Created', group: 'Blog' },
-  { value: 'blog.update', label: 'Blog Updated', group: 'Blog' },
-  { value: 'blog.delete', label: 'Blog Deleted', group: 'Blog' },
-  { value: 'blog.publish', label: 'Blog Published', group: 'Blog' },
+  { value: 'blog.create', label: 'Statistic Created', group: 'Statistics' },
+  { value: 'blog.update', label: 'Statistic Updated', group: 'Statistics' },
+  { value: 'blog.delete', label: 'Statistic Deleted', group: 'Statistics' },
+  { value: 'blog.publish', label: 'Statistic Published', group: 'Statistics' },
   { value: 'press_release.create', label: 'PR Created', group: 'Press Release' },
   { value: 'press_release.update', label: 'PR Updated', group: 'Press Release' },
   { value: 'press_release.delete', label: 'PR Deleted', group: 'Press Release' },
@@ -54,7 +54,7 @@ const ENTITY_OPTIONS: { value: AuditLogEntityType | ''; label: string }[] = [
   { value: 'report', label: 'Report' },
   { value: 'category', label: 'Category' },
   { value: 'author', label: 'Author' },
-  { value: 'blog', label: 'Blog' },
+  { value: 'blog', label: 'Statistics' },
   { value: 'press_release', label: 'Press Release' },
 ];
 

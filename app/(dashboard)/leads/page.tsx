@@ -8,7 +8,7 @@ import { Search, Mail, Download, RefreshCw } from 'lucide-react';
 import { useLeads } from '@/hooks/use-leads';
 import { LeadsList } from '@/components/leads/leads-list';
 import { LeadsStats } from '@/components/leads/leads-stats';
-import { LeadsFilters } from '@/components/leads/leads-filters';
+import { LeadsFilters, type EmailDomainFilter } from '@/components/leads/leads-filters';
 import { TableSkeleton } from '@/components/ui/skeletons/table-skeleton';
 import { StatsCardsSkeleton } from '@/components/ui/skeletons/stats-cards-skeleton';
 import type { ApiFormSubmission } from '@/lib/types/api-types';
@@ -30,13 +30,14 @@ export default function LeadsPage() {
 
   const [filteredSubmissions, setFilteredSubmissions] = useState<ApiFormSubmission[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [emailDomain, setEmailDomain] = useState<EmailDomainFilter>('all');
 
   useEffect(() => {
-    if (searchQuery.trim() === '') {
-      setFilteredSubmissions(submissions);
-    } else {
+    let filtered = submissions;
+
+    if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase();
-      const filtered = submissions.filter(submission => {
+      filtered = filtered.filter(submission => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data = submission.data as any;
         return (
@@ -47,9 +48,19 @@ export default function LeadsPage() {
           data.reportTitle?.toLowerCase().includes(query)
         );
       });
-      setFilteredSubmissions(filtered);
     }
-  }, [searchQuery, submissions]);
+
+    if (emailDomain !== 'all') {
+      filtered = filtered.filter(submission => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const email: string = (submission.data as any).email ?? '';
+        const isGmail = email.toLowerCase().endsWith('@gmail.com');
+        return emailDomain === 'gmail' ? isGmail : !isGmail;
+      });
+    }
+
+    setFilteredSubmissions(filtered);
+  }, [searchQuery, emailDomain, submissions]);
 
   const handlePageChange = (page: number) => {
     setFilters({ ...filters, page });
@@ -107,7 +118,12 @@ export default function LeadsPage() {
                   className="pl-10"
                 />
               </div>
-              <LeadsFilters filters={filters} onFilterChange={setFilters} />
+              <LeadsFilters
+                filters={filters}
+                onFilterChange={setFilters}
+                emailDomain={emailDomain}
+                onEmailDomainChange={setEmailDomain}
+              />
             </div>
 
             {isLoading ? (

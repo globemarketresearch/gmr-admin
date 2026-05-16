@@ -13,14 +13,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TableSkeleton } from '@/components/ui/skeletons/table-skeleton';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import type { Blog, BlogStatus } from '@/lib/types/blogs';
+import type { Statistic, StatisticStatus } from '@/lib/types/statistics';
 import { formatDate } from '@/lib/utils/date';
 import { Edit, Eye, Trash2, Clock, ExternalLink, RotateCcw } from 'lucide-react';
-import { BLOG_STATUS_CONFIG } from '@/lib/config/blogs';
+import { STATISTIC_STATUS_CONFIG } from '@/lib/config/statistics';
 import { config } from '@/lib/config';
 
-interface BlogListProps {
-  blogs: Blog[];
+interface StatisticsListProps {
+  statistics: Statistic[];
   isLoading: boolean;
   viewMode?: 'active' | 'trash';
   onDelete?: (id: string) => void;
@@ -30,7 +30,7 @@ interface BlogListProps {
 }
 
 function getStatusBadgeVariant(
-  status: BlogStatus
+  status: StatisticStatus
 ): 'default' | 'secondary' | 'destructive' | 'outline' {
   switch (status) {
     case 'published':
@@ -53,23 +53,23 @@ function getAuthorInitials(name?: string): string {
     .slice(0, 2);
 }
 
-export function BlogList({
-  blogs,
+export function StatisticsList({
+  statistics,
   isLoading,
   viewMode = 'active',
   onDelete,
   onSoftDelete,
   onRestore,
   onHardDelete,
-}: BlogListProps) {
+}: StatisticsListProps) {
   if (isLoading) {
     return <TableSkeleton rows={5} columns={6} showHeader={true} showActions={true} />;
   }
 
-  if (blogs.length === 0) {
+  if (statistics.length === 0) {
     return (
       <div className="text-center py-12 border rounded-lg">
-        <p className="text-muted-foreground">No blog posts found</p>
+        <p className="text-muted-foreground">No statistic posts found</p>
       </div>
     );
   }
@@ -90,59 +90,62 @@ export function BlogList({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {blogs.map(blog => (
-            <TableRow key={blog.id} className={viewMode === 'trash' ? 'opacity-70' : ''}>
+          {statistics.map(statistic => (
+            <TableRow
+              key={statistic.id}
+              className={viewMode === 'trash' ? 'opacity-70' : ''}
+            >
               <TableCell className="font-medium max-w-xs">
-                <div className="truncate">{blog.title}</div>
+                <div className="truncate">{statistic.title}</div>
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <Avatar className="h-6 w-6">
                     <AvatarFallback className="text-xs">
-                      {getAuthorInitials(blog.author.name)}
+                      {getAuthorInitials(statistic.author.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm truncate max-w-[100px]">{blog.author.name}</span>
+                  <span className="text-sm truncate max-w-[100px]">{statistic.author.name}</span>
                 </div>
               </TableCell>
-              <TableCell>{blog.categoryName || 'Uncategorized'}</TableCell>
+              <TableCell>{statistic.categoryName || 'Uncategorized'}</TableCell>
               <TableCell className="text-sm text-muted-foreground">
-                {blog.location || '-'}
+                {statistic.location || '-'}
               </TableCell>
               <TableCell>
-                {blog.status === 'draft' &&
-                blog.scheduledPublishEnabled &&
-                blog.publishDate &&
-                new Date(blog.publishDate) > new Date() ? (
+                {statistic.status === 'draft' &&
+                statistic.scheduledPublishEnabled &&
+                statistic.publishDate &&
+                new Date(statistic.publishDate) > new Date() ? (
                   <Badge variant="outline">Scheduled</Badge>
                 ) : (
-                  <Badge variant={getStatusBadgeVariant(blog.status)}>
-                    {BLOG_STATUS_CONFIG[blog.status].label}
+                  <Badge variant={getStatusBadgeVariant(statistic.status)}>
+                    {STATISTIC_STATUS_CONFIG[statistic.status].label}
                   </Badge>
                 )}
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Clock className="h-3 w-3" />
-                  {blog.readingTime} min
+                  {statistic.readingTime} min
                 </div>
               </TableCell>
               <TableCell className="text-sm text-muted-foreground">
-                {formatDate(blog.updatedAt)}
+                {formatDate(statistic.updatedAt)}
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
                   {viewMode === 'active' && (
                     <>
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/blog/${blog.id}/preview`}>
+                        <Link href={`/statistics/${statistic.id}/preview`}>
                           <Eye className="h-4 w-4" />
                         </Link>
                       </Button>
                       {config.preview.domain && (
                         <Button variant="ghost" size="sm" asChild title="Preview on public site">
                           <Link
-                            href={`${config.preview.domain}/blog/${blog.slug}`}
+                            href={`${config.preview.domain}/statistics/${statistic.slug}`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
@@ -151,7 +154,7 @@ export function BlogList({
                         </Button>
                       )}
                       <Button variant="ghost" size="sm" asChild>
-                        <Link href={`/blog/${blog.id}`}>
+                        <Link href={`/statistics/${statistic.id}`}>
                           <Edit className="h-4 w-4" />
                         </Link>
                       </Button>
@@ -160,7 +163,9 @@ export function BlogList({
                           variant="ghost"
                           size="sm"
                           onClick={() =>
-                            onSoftDelete ? onSoftDelete(blog.id) : onDelete?.(blog.id)
+                            onSoftDelete
+                              ? onSoftDelete(statistic.id)
+                              : onDelete?.(statistic.id)
                           }
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />
@@ -174,7 +179,7 @@ export function BlogList({
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => onRestore(blog.id)}
+                          onClick={() => onRestore(statistic.id)}
                           title="Restore"
                         >
                           <RotateCcw className="h-4 w-4 text-green-600" />
@@ -184,7 +189,7 @@ export function BlogList({
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => onHardDelete(blog.id)}
+                          onClick={() => onHardDelete(statistic.id)}
                           title="Permanent Delete"
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />

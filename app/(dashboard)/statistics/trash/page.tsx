@@ -15,38 +15,42 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { BlogList } from '@/components/blogs/blog-list';
-import { BlogFiltersComponent } from '@/components/blogs/blog-filters';
+import { StatisticsList } from '@/components/statistics/statistics-list';
+import { StatisticsFiltersComponent } from '@/components/statistics/statistics-filters';
 import { PaginationWrapper as Pagination } from '@/components/ui/pagination-wrapper';
 import { useAuth } from '@/contexts/auth-context';
-import { deleteBlog, fetchTrashedBlogs, restoreBlog } from '@/lib/api/blogs';
+import {
+  deleteStatistic,
+  fetchTrashedStatistics,
+  restoreStatistic,
+} from '@/lib/api/statistics';
 import { fetchAuthors } from '@/lib/api/authors';
-import type { Blog, BlogFilters } from '@/lib/types/blogs';
+import type { Statistic, StatisticFilters } from '@/lib/types/statistics';
 import type { ReportAuthor } from '@/lib/types/reports';
 
-// Custom hook for trashed blogs
-function useTrashedBlogs(initialFilters?: BlogFilters) {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+// Custom hook for trashed statistics
+function useTrashedStatistics(initialFilters?: StatisticFilters) {
+  const [statistics, setStatistics] = useState<Statistic[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(initialFilters?.page || 1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filters, setFiltersState] = useState<BlogFilters>(initialFilters || {});
+  const [filters, setFiltersState] = useState<StatisticFilters>(initialFilters || {});
 
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await fetchTrashedBlogs(filters);
-      setBlogs(response.blogs);
+      const response = await fetchTrashedStatistics(filters);
+      setStatistics(response.statistics);
       setTotal(response.total);
       setTotalPages(response.totalPages);
       setCurrentPage(response.page);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch blogs';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch statistics';
       setError(errorMessage);
-      toast.error('Failed to load trashed blogs');
+      toast.error('Failed to load trashed statistics');
     } finally {
       setIsLoading(false);
     }
@@ -56,14 +60,14 @@ function useTrashedBlogs(initialFilters?: BlogFilters) {
     fetchData();
   }, [fetchData]);
 
-  const setFilters = useCallback((newFilters: BlogFilters) => {
+  const setFilters = useCallback((newFilters: StatisticFilters) => {
     setFiltersState(prev => ({ ...prev, ...newFilters }));
   }, []);
 
   const restore = useCallback(
     async (id: string) => {
       try {
-        await restoreBlog(id);
+        await restoreStatistic(id);
         await fetchData();
       } catch (error) {
         throw error;
@@ -75,7 +79,7 @@ function useTrashedBlogs(initialFilters?: BlogFilters) {
   const hardDelete = useCallback(
     async (id: string) => {
       try {
-        await deleteBlog(id);
+        await deleteStatistic(id);
         await fetchData();
       } catch (error) {
         throw error;
@@ -85,7 +89,7 @@ function useTrashedBlogs(initialFilters?: BlogFilters) {
   );
 
   return {
-    blogs,
+    statistics,
     total,
     totalPages,
     currentPage,
@@ -98,13 +102,13 @@ function useTrashedBlogs(initialFilters?: BlogFilters) {
   };
 }
 
-export default function BlogTrashPage() {
+export default function StatisticsTrashPage() {
   const router = useRouter();
   const { user } = useAuth();
-  const [filters, setFilters] = useState<BlogFilters>({ page: 1, limit: 10 });
+  const [filters, setFilters] = useState<StatisticFilters>({ page: 1, limit: 10 });
   const [authors, setAuthors] = useState<ReportAuthor[]>([]);
   const {
-    blogs,
+    statistics,
     total,
     totalPages,
     currentPage,
@@ -113,16 +117,22 @@ export default function BlogTrashPage() {
     setFilters: updateFilters,
     restore,
     hardDelete,
-  } = useTrashedBlogs(filters);
+  } = useTrashedStatistics(filters);
 
-  const [restoreDialog, setRestoreDialog] = useState<{ open: boolean; blogId: string | null }>({
+  const [restoreDialog, setRestoreDialog] = useState<{
+    open: boolean;
+    statisticId: string | null;
+  }>({
     open: false,
-    blogId: null,
+    statisticId: null,
   });
 
-  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; blogId: string | null }>({
+  const [deleteDialog, setDeleteDialog] = useState<{
+    open: boolean;
+    statisticId: string | null;
+  }>({
     open: false,
-    blogId: null,
+    statisticId: null,
   });
 
   const isAdmin = user?.role === 'admin';
@@ -141,28 +151,28 @@ export default function BlogTrashPage() {
   }, []);
 
   const handleRestore = async () => {
-    if (!restoreDialog.blogId) return;
+    if (!restoreDialog.statisticId) return;
 
     try {
-      await restore(restoreDialog.blogId);
-      toast.success('Blog restored successfully');
-      setRestoreDialog({ open: false, blogId: null });
+      await restore(restoreDialog.statisticId);
+      toast.success('Statistic restored successfully');
+      setRestoreDialog({ open: false, statisticId: null });
     } catch (error) {
-      console.error('Failed to restore blog:', error);
-      toast.error('Failed to restore blog');
+      console.error('Failed to restore statistic:', error);
+      toast.error('Failed to restore statistic');
     }
   };
 
   const handlePermanentDelete = async () => {
-    if (!deleteDialog.blogId) return;
+    if (!deleteDialog.statisticId) return;
 
     try {
-      await hardDelete(deleteDialog.blogId);
-      toast.success('Blog permanently deleted');
-      setDeleteDialog({ open: false, blogId: null });
+      await hardDelete(deleteDialog.statisticId);
+      toast.success('Statistic permanently deleted');
+      setDeleteDialog({ open: false, statisticId: null });
     } catch (error) {
-      console.error('Failed to delete blog:', error);
-      toast.error('Failed to delete blog permanently');
+      console.error('Failed to delete statistic:', error);
+      toast.error('Failed to delete statistic permanently');
     }
   };
 
@@ -171,7 +181,7 @@ export default function BlogTrashPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.push('/blog')}>
+          <Button variant="ghost" size="icon" onClick={() => router.push('/statistics')}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
@@ -180,7 +190,7 @@ export default function BlogTrashPage() {
               Trash
             </h1>
             <p className="text-muted-foreground mt-1">
-              {total} {total === 1 ? 'blog' : 'blogs'} in trash
+              {total} {total === 1 ? 'statistic' : 'statistics'} in trash
             </p>
           </div>
         </div>
@@ -191,7 +201,7 @@ export default function BlogTrashPage() {
       </div>
 
       {/* Filters */}
-      <BlogFiltersComponent
+      <StatisticsFiltersComponent
         filters={filters}
         onFiltersChange={newFilters => {
           setFilters({ ...newFilters, page: 1 });
@@ -200,23 +210,25 @@ export default function BlogTrashPage() {
         authors={authors}
       />
 
-      {/* Blog List */}
+      {/* Statistics List */}
       {isLoading ? (
         <div>Loading...</div>
-      ) : blogs.length === 0 ? (
+      ) : statistics.length === 0 ? (
         <div className="text-center py-12 border rounded-lg">
           <Trash2 className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
           <p className="text-lg font-medium">Trash is empty</p>
-          <p className="text-muted-foreground mt-1">Deleted blogs will appear here</p>
+          <p className="text-muted-foreground mt-1">Deleted statistics will appear here</p>
         </div>
       ) : (
         <>
-          <BlogList
-            blogs={blogs}
+          <StatisticsList
+            statistics={statistics}
             isLoading={isLoading}
             viewMode="trash"
-            onRestore={id => setRestoreDialog({ open: true, blogId: id })}
-            onHardDelete={isAdmin ? id => setDeleteDialog({ open: true, blogId: id }) : undefined}
+            onRestore={id => setRestoreDialog({ open: true, statisticId: id })}
+            onHardDelete={
+              isAdmin ? id => setDeleteDialog({ open: true, statisticId: id }) : undefined
+            }
           />
 
           {/* Pagination */}
@@ -241,9 +253,9 @@ export default function BlogTrashPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Restore Blog?</AlertDialogTitle>
+            <AlertDialogTitle>Restore Statistic?</AlertDialogTitle>
             <AlertDialogDescription>
-              This blog will be restored and moved back to active blogs.
+              This statistic will be restored and moved back to active statistics.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -263,10 +275,10 @@ export default function BlogTrashPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Permanently Delete Blog?</AlertDialogTitle>
+            <AlertDialogTitle>Permanently Delete Statistic?</AlertDialogTitle>
             <AlertDialogDescription className="text-destructive font-medium">
-              This action cannot be undone! The blog and all its data will be permanently deleted
-              from the database.
+              This action cannot be undone! The statistic and all its data will be permanently
+              deleted from the database.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

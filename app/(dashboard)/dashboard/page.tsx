@@ -34,10 +34,10 @@ export default function DashboardPage() {
       roles: ['admin', 'editor'],
     },
     {
-      title: 'Write Blog Post',
-      description: 'Publish a new blog article',
+      title: 'Write Statistic Post',
+      description: 'Publish a new statistic article',
       icon: PenSquare,
-      href: '/blog/new',
+      href: '/statistics/new',
       roles: ['admin', 'editor'],
     },
     {
@@ -148,13 +148,17 @@ export default function DashboardPage() {
           isLoading={isLoading}
         />
 
-        {/* Blog Posts Card */}
+        {/* Statistics Posts Card */}
         <StatCard
-          title="Blog Posts"
-          value={stats ? stats.blogs.total : 0}
-          subtext={stats ? `${stats.blogs.published} published, ${stats.blogs.draft} drafts` : ''}
+          title="Statistics Posts"
+          value={stats ? (stats.statistics ?? stats.blogs)?.total ?? 0 : 0}
+          subtext={
+            stats
+              ? `${(stats.statistics ?? stats.blogs)?.published ?? 0} published, ${(stats.statistics ?? stats.blogs)?.draft ?? 0} drafts`
+              : ''
+          }
           icon={PenSquare}
-          change={stats?.blogs.change}
+          change={stats ? (stats.statistics ?? stats.blogs)?.change : undefined}
           isLoading={isLoading}
         />
 
@@ -190,13 +194,14 @@ export default function DashboardPage() {
           value={
             stats
               ? stats.contentCreation.reportsThisMonth +
-                stats.contentCreation.blogsThisMonth +
+                (stats.contentCreation.statisticsThisMonth ??
+                  stats.contentCreation.blogsThisMonth) +
                 stats.contentCreation.pressReleasesThisMonth
               : 0
           }
           subtext={
             stats
-              ? `${stats.contentCreation.reportsThisMonth} reports, ${stats.contentCreation.blogsThisMonth} blogs`
+              ? `${stats.contentCreation.reportsThisMonth} reports, ${stats.contentCreation.statisticsThisMonth ?? stats.contentCreation.blogsThisMonth} statistics`
               : ''
           }
           icon={TrendingUp}

@@ -16,7 +16,7 @@ import { SCHEMA_TEMPLATES, type SchemaTemplateType } from '@/lib/config/seo';
 interface SchemaJsonEditorProps {
   value: string;
   onChange: (value: string) => void;
-  contentType: 'blog' | 'report';
+  contentType: 'statistics' | 'blog' | 'report';
   contentData?: {
     title: string;
     description: string;

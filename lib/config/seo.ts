@@ -90,7 +90,8 @@ export type RobotsDirective = (typeof ROBOTS_DIRECTIVES)[number];
 
 // OpenGraph types
 export const OG_TYPES = {
-  blog: 'article',
+  statistics: 'article',
+  blog: 'article', // legacy alias
   report: 'article',
 } as const;
 

@@ -12,12 +12,21 @@ import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
 import type { FormSubmissionFilters, FormCategory, FormStatus } from '@/lib/types/api-types';
 
+export type EmailDomainFilter = 'all' | 'gmail' | 'non-gmail';
+
 interface LeadsFiltersProps {
   filters: FormSubmissionFilters;
   onFilterChange: (filters: FormSubmissionFilters) => void;
+  emailDomain: EmailDomainFilter;
+  onEmailDomainChange: (value: EmailDomainFilter) => void;
 }
 
-export function LeadsFilters({ filters, onFilterChange }: LeadsFiltersProps) {
+export function LeadsFilters({
+  filters,
+  onFilterChange,
+  emailDomain,
+  onEmailDomainChange,
+}: LeadsFiltersProps) {
   const handleCategoryChange = (value: string) => {
     if (value === 'all') {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,9 +49,10 @@ export function LeadsFilters({ filters, onFilterChange }: LeadsFiltersProps) {
 
   const clearFilters = () => {
     onFilterChange({ page: 1, limit: 20, sortOrder: 'desc' });
+    onEmailDomainChange('all');
   };
 
-  const activeFilterCount = [filters.category, filters.status].filter(Boolean).length;
+  const activeFilterCount = [filters.category, filters.status, emailDomain !== 'all' ? emailDomain : undefined].filter(Boolean).length;
 
   return (
     <div className="flex items-center gap-4 flex-wrap">
@@ -72,6 +82,20 @@ export function LeadsFilters({ filters, onFilterChange }: LeadsFiltersProps) {
             <SelectItem value="pending">Pending</SelectItem>
             <SelectItem value="processed">Processed</SelectItem>
             <SelectItem value="archived">Archived</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <label className="text-sm font-medium">Email:</label>
+        <Select value={emailDomain} onValueChange={v => onEmailDomainChange(v as EmailDomainFilter)}>
+          <SelectTrigger className="w-[160px]">
+            <SelectValue placeholder="All domains" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Domains</SelectItem>
+            <SelectItem value="gmail">Gmail only</SelectItem>
+            <SelectItem value="non-gmail">Non-Gmail only</SelectItem>
           </SelectContent>
         </Select>
       </div>

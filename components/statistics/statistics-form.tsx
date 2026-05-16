@@ -32,8 +32,8 @@ import {
   EXCERPT_MIN_LENGTH,
   EXCERPT_MAX_LENGTH,
   CONTENT_MIN_LENGTH,
-} from '@/lib/config/blogs';
-import type { BlogFormData, Blog, InternalLinkEntry } from '@/lib/types/blogs';
+} from '@/lib/config/statistics';
+import type { StatisticFormData, Statistic, InternalLinkEntry } from '@/lib/types/statistics';
 import { Save, Eye, Wand2, Copy } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { fetchCategories, type Category } from '@/lib/api/categories';
@@ -47,7 +47,7 @@ import { InternalLinkPanel } from '@/components/editor/internal-link-panel';
 import type { TiptapEditorLike } from '@/hooks/use-internal-link-keywords';
 
 // Validation schema
-const blogFormSchema = z.object({
+const statisticFormSchema = z.object({
   title: z
     .string()
     .min(TITLE_MIN_LENGTH, `Title must be at least ${TITLE_MIN_LENGTH} characters`)
@@ -79,23 +79,29 @@ const blogFormSchema = z.object({
   }),
 });
 
-type BlogFormSchema = z.infer<typeof blogFormSchema>;
+type StatisticFormSchema = z.infer<typeof statisticFormSchema>;
 
-interface BlogFormProps {
-  blog?: Blog;
-  onSubmit: (data: BlogFormData) => Promise<void>;
+interface StatisticsFormProps {
+  statistic?: Statistic;
+  onSubmit: (data: StatisticFormData) => Promise<void>;
   onPreview?: () => void;
   isSaving: boolean;
   formId?: string;
 }
 
-export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFormProps) {
+export function StatisticsForm({
+  statistic,
+  onSubmit,
+  onPreview,
+  isSaving,
+  formId,
+}: StatisticsFormProps) {
   const [keywordInput, setKeywordInput] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
   const [contentEditor, setContentEditor] = useState<TiptapEditorLike | null>(null);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [internalLinks, setInternalLinks] = useState<InternalLinkEntry[]>(
-    blog?.internalLinks ?? []
+    statistic?.internalLinks ?? []
   );
 
   useEffect(() => {
@@ -115,23 +121,23 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
   };
 
   const form = useForm({
-    resolver: zodResolver(blogFormSchema),
-    defaultValues: blog
+    resolver: zodResolver(statisticFormSchema),
+    defaultValues: statistic
       ? {
-          title: blog.title,
-          slug: blog.slug,
-          excerpt: blog.excerpt,
-          content: blog.content,
-          categoryId: blog.categoryId || 0,
-          tags: blog.tags || '',
-          authorId: String(blog.authorId),
-          status: blog.status,
-          publishDate: blog.publishDate,
-          location: blog.location || '',
+          title: statistic.title,
+          slug: statistic.slug,
+          excerpt: statistic.excerpt,
+          content: statistic.content,
+          categoryId: statistic.categoryId || 0,
+          tags: statistic.tags || '',
+          authorId: String(statistic.authorId),
+          status: statistic.status,
+          publishDate: statistic.publishDate,
+          location: statistic.location || '',
           metadata: {
-            metaTitle: blog.metadata.metaTitle || '',
-            metaDescription: blog.metadata.metaDescription || '',
-            keywords: blog.metadata.keywords || [],
+            metaTitle: statistic.metadata.metaTitle || '',
+            metaDescription: statistic.metadata.metaDescription || '',
+            keywords: statistic.metadata.keywords || [],
           },
         }
       : {
@@ -153,12 +159,12 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
         },
   });
 
-  const handleFormSubmit = async (data: BlogFormSchema) => {
-    await onSubmit({ ...(data as BlogFormData), internalLinks });
+  const handleFormSubmit = async (data: StatisticFormSchema) => {
+    await onSubmit({ ...(data as StatisticFormData), internalLinks });
   };
 
   const fillSampleData = () => {
-    const sampleData: Partial<BlogFormSchema> = {
+    const sampleData: Partial<StatisticFormSchema> = {
       title: 'AI-Powered Diagnostics Revolution in Healthcare Market',
       slug: 'ai-powered-diagnostics-revolution-healthcare-market',
       excerpt:
@@ -184,7 +190,7 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
 
     // Fill the form with sample data
     Object.entries(sampleData).forEach(([key, value]) => {
-      form.setValue(key as keyof BlogFormSchema, value);
+      form.setValue(key as keyof StatisticFormSchema, value);
     });
   };
 
@@ -208,10 +214,10 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Blog Title</FormLabel>
+                  <FormLabel>Statistic Title</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Enter a compelling title for your blog post..."
+                      placeholder="Enter a compelling title for your statistic post..."
                       {...field}
                     />
                   </FormControl>
@@ -231,7 +237,7 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
                   <FormLabel>Slug</FormLabel>
                   <div className="flex gap-2">
                     <FormControl>
-                      <Input placeholder="url-friendly-slug-for-blog" {...field} />
+                      <Input placeholder="url-friendly-slug-for-statistic" {...field} />
                     </FormControl>
                     <Button
                       type="button"
@@ -257,7 +263,7 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
                       onClick={() => {
                         if (field.value) {
                           navigator.clipboard.writeText(
-                            `${config.preview.domain}/blog/${field.value}`
+                            `${config.preview.domain}/statistics/${field.value}`
                           );
                           toast.success('URL copied to clipboard');
                         }
@@ -284,7 +290,7 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
                   <FormLabel>Excerpt</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Write a brief summary that appears in blog listings..."
+                      placeholder="Write a brief summary that appears in statistic listings..."
                       rows={3}
                       {...field}
                     />
@@ -328,7 +334,7 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormDescription>Select the category for this blog post</FormDescription>
+                  <FormDescription>Select the category for this statistic post</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -377,7 +383,9 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
                   <FormControl>
                     <Input placeholder="Enter location (e.g., New York, USA)" {...field} />
                   </FormControl>
-                  <FormDescription>Optional location field for the blog post</FormDescription>
+                  <FormDescription>
+                    Optional location field for the statistic post
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -385,10 +393,10 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
           </CardContent>
         </Card>
 
-        {/* Blog Content */}
+        {/* Statistic Content */}
         <Card>
           <CardHeader>
-            <CardTitle>Blog Content</CardTitle>
+            <CardTitle>Statistic Content</CardTitle>
           </CardHeader>
           <CardContent>
             <FormField
@@ -400,7 +408,7 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
                     <TiptapEditor
                       content={field.value}
                       onChange={field.onChange}
-                      placeholder="Start writing your blog post..."
+                      placeholder="Start writing your statistic post..."
                       onEditorReady={ed => setContentEditor(ed as TiptapEditorLike | null)}
                     />
                   </FormControl>
@@ -415,7 +423,7 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
           editor={contentEditor}
           onContentChange={html => form.setValue('content', html, { shouldDirty: true })}
           onLinksChange={setInternalLinks}
-          initialLinks={blog?.internalLinks ?? []}
+          initialLinks={statistic?.internalLinks ?? []}
         />
 
         {/* SEO Metadata */}
@@ -445,7 +453,7 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
                   <FormControl>
                     <Input placeholder="SEO-friendly title (optional)" {...field} />
                   </FormControl>
-                  <FormDescription>Leave empty to use blog title</FormDescription>
+                  <FormDescription>Leave empty to use statistic title</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -550,7 +558,7 @@ export function BlogForm({ blog, onSubmit, onPreview, isSaving, formId }: BlogFo
                 {!formId && (
                   <Button type="submit" disabled={isSaving}>
                     <Save className="h-4 w-4 mr-2" />
-                    {isSaving ? 'Saving...' : 'Save Blog Post'}
+                    {isSaving ? 'Saving...' : 'Save Statistic Post'}
                   </Button>
                 )}
               </div>

@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: config.app.name,
-  description: 'Admin panel for managing market research reports, blogs, and content',
+  description: 'Admin panel for managing market research reports, statistics, and content',
 };
 
 export default function RootLayout({

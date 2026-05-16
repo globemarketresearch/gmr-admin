@@ -33,7 +33,7 @@ const TYPE_META: Record<
   { label: string; icon: React.ElementType; color: string }
 > = {
   report: { label: 'Report', icon: FileText, color: 'text-blue-600' },
-  blog: { label: 'Blog', icon: BookOpen, color: 'text-emerald-600' },
+  blog: { label: 'Statistic', icon: BookOpen, color: 'text-emerald-600' },
   'press-release': { label: 'PR', icon: Newspaper, color: 'text-violet-600' },
 };
 
@@ -231,7 +231,7 @@ export function InternalLinkPanel({
 
           {entries.length === 0 && (
             <p className="text-xs text-muted-foreground py-2 text-center">
-              Add keywords to auto-link them to matching reports, blogs, or press releases.
+              Add keywords to auto-link them to matching reports, statistics, or press releases.
             </p>
           )}
         </CardContent>

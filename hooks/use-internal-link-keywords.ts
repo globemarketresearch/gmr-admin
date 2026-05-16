@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { fetchReports } from '@/lib/api/reports.api';
-import { fetchBlogs } from '@/lib/api/blogs';
+import { fetchBlogs } from '@/lib/api/statistics';
 import { fetchPressReleases } from '@/lib/api/press-releases';
 import type { InternalLinkEntry } from '@/lib/types/reports';
 
