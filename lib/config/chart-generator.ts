@@ -9,7 +9,7 @@ import type {
 
 // Professional color palette (muted, market-research grade)
 export const DEFAULT_CHART_COLORS = [
-  '#5B8EBC', // Muted blue
+  '#101D40', // Dark navy
   '#7FC9A0', // Soft green
   '#F4A261', // Warm orange
   '#E76F51', // Terracotta

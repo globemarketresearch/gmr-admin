@@ -37,7 +37,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
       },
       subtextStyle: {
         fontSize: 14,
-        color: '#666666',
+        color: '#111111',
         fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       },
     },
@@ -75,7 +75,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
             itemHeight: 14,
             textStyle: {
               fontSize: 12,
-              color: '#4b5563',
+              color: '#111111',
             },
           }
         : { show: false },
@@ -112,7 +112,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
         nameGap: 30,
         nameTextStyle: {
           fontSize: 13,
-          color: '#6b7280',
+          color: '#111111',
           fontWeight: 500,
         },
         axisLine: {
@@ -121,7 +121,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
           },
         },
         axisLabel: {
-          color: '#4b5563',
+          color: '#111111',
           fontSize: 12,
         },
         splitLine: {
@@ -134,11 +134,11 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
         name: metadata.yAxisLabel,
         nameTextStyle: {
           fontSize: 13,
-          color: '#6b7280',
+          color: '#111111',
           fontWeight: 500,
         },
         axisLabel: {
-          color: '#4b5563',
+          color: '#111111',
           fontSize: 12,
           formatter: (value: number) => {
             const formatted = Number(value.toFixed(metadata.decimalPrecision));
@@ -166,11 +166,11 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
         name: metadata.xAxisLabel,
         nameTextStyle: {
           fontSize: 13,
-          color: '#6b7280',
+          color: '#111111',
           fontWeight: 500,
         },
         axisLabel: {
-          color: '#4b5563',
+          color: '#111111',
           fontSize: 12,
           formatter: (value: number) => {
             const formatted = Number(value.toFixed(metadata.decimalPrecision));
@@ -201,7 +201,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
         nameGap: 80,
         nameTextStyle: {
           fontSize: 13,
-          color: '#6b7280',
+          color: '#111111',
           fontWeight: 500,
         },
         axisLine: {
@@ -210,7 +210,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
           },
         },
         axisLabel: {
-          color: '#4b5563',
+          color: '#111111',
           fontSize: 12,
         },
         splitLine: {
@@ -238,7 +238,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
         color: [colorScheme.min, colorScheme.mid, colorScheme.max],
       },
       textStyle: {
-        color: '#4b5563',
+        color: '#111111',
         fontSize: 12,
       },
       left: 'left',
@@ -320,7 +320,7 @@ function buildSeriesConfig(
             show: true,
             formatter: '{b}',
             fontSize: 12,
-            color: '#4b5563',
+            color: '#111111',
           },
           emphasis: {
             itemStyle: {
@@ -348,7 +348,7 @@ function buildSeriesConfig(
           show: true,
           formatter: '{b}',
           fontSize: 12,
-          color: '#4b5563',
+          color: '#111111',
         },
         emphasis: {
           itemStyle: {
@@ -395,7 +395,7 @@ function buildSeriesConfig(
         label: {
           show: false, // Don't show labels by default
           fontSize: 10,
-          color: '#4b5563',
+          color: '#111111',
         },
         data: echartsMapData,
       },
@@ -442,7 +442,7 @@ function buildSeriesConfig(
             show: true,
             formatter: '{b}',
             fontSize: 12,
-            color: '#4b5563',
+            color: '#111111',
           },
           emphasis: {
             itemStyle: {
@@ -470,7 +470,7 @@ function buildSeriesConfig(
           show: true,
           formatter: '{b}',
           fontSize: 12,
-          color: '#4b5563',
+          color: '#111111',
         },
         emphasis: {
           itemStyle: {
@@ -522,7 +522,7 @@ function buildSeriesConfig(
         return value + (metadata.unitSuffix || '');
       },
       fontSize: 12,
-      color: '#4b5563',
+      color: '#111111',
       fontWeight: 500,
     },
     emphasis: {
@@ -565,7 +565,7 @@ function buildSourceTextGraphic(sourceText: string) {
       text: `Source: ${sourceText}`,
       fontSize: 11,
       fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-      fill: '#666666',
+      fill: '#111111',
       fontWeight: 400,
     },
     z: 100,
