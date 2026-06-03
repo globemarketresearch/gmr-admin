@@ -356,6 +356,7 @@ function buildSeriesConfig(
           formatter: '{b}',
           fontSize: 12,
           color: '#111111',
+          fontWeight: 600,
         },
         emphasis: {
           itemStyle: {
@@ -479,6 +480,7 @@ function buildSeriesConfig(
           formatter: '{b}',
           fontSize: 12,
           color: '#111111',
+          fontWeight: 600,
         },
         emphasis: {
           itemStyle: {
