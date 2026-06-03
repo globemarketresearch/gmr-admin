@@ -67,7 +67,7 @@ export function DataInputPanel() {
               id="source"
               value={metadata.source || ''}
               onChange={e => updateMetadata({ source: e.target.value })}
-              placeholder="www.healthcareforesights.com"
+              placeholder="www.globemarketresearch.com"
               maxLength={100}
             />
             <p className="text-xs text-muted-foreground">

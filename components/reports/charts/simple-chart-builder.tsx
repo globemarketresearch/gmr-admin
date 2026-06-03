@@ -94,7 +94,7 @@ function generateDefaultChartData(reportData?: ReportFormData): ReportChart {
     showLegend: true,
     showGridlines: true,
     axisLabelDisplay: 'first-second-last',
-    source: 'www.healthcareforesights.com', // POC default
+    source: 'www.globemarketresearch.com', // POC default
     logoUrl: undefined, // No logo by default
     logoPosition: 'top-right', // Default position
     logoOpacity: 80, // Default opacity
@@ -123,7 +123,7 @@ export function SimpleChartBuilder({
       // Editing existing chart - apply defaults for missing fields
       return {
         ...chart,
-        source: chart.source ?? 'www.healthcareforesights.com',
+        source: chart.source ?? 'www.globemarketresearch.com',
         logoPosition: chart.logoPosition ?? 'top-right',
         logoOpacity: chart.logoOpacity ?? 80,
         axisLabelDisplay: chart.axisLabelDisplay ?? 'first-second-last',
