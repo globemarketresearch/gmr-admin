@@ -16,7 +16,6 @@ import { SimpleDataEditor } from './simple-data-editor';
 import { SimpleChartPreview, type SimpleChartPreviewRef } from './simple-chart-preview';
 import type { ReportChart, ReportChartType, ReportFormData } from '@/lib/types/reports';
 import { DEFAULT_CHART_COLORS } from '@/lib/config/chart-generator';
-import { toPng } from 'html-to-image';
 import { toast } from 'sonner';
 import { Loader2, Minimize2 } from 'lucide-react';
 import {
@@ -151,14 +150,12 @@ export function SimpleChartBuilder({
 
     setIsGeneratingPreview(true);
     try {
-      // Generate chart image preview
-      const exportContainer = previewRef.current?.getExportContainer();
-      if (!exportContainer) {
-        throw new Error('Chart preview not ready');
-      }
+      const chartInstance = previewRef.current?.getChartInstance();
+      if (!chartInstance) throw new Error('Chart preview not ready');
 
-      const dataUrl = await toPng(exportContainer, {
-        quality: 1.0,
+      const echartsInstance = chartInstance.getEchartsInstance();
+      const dataUrl = echartsInstance.getDataURL({
+        type: 'png',
         pixelRatio: 2,
         backgroundColor: '#ffffff',
       });
@@ -186,14 +183,12 @@ export function SimpleChartBuilder({
 
     setIsGenerating(true);
     try {
-      // Generate chart image
-      const exportContainer = previewRef.current?.getExportContainer();
-      if (!exportContainer) {
-        throw new Error('Chart preview not ready');
-      }
+      const chartInstance = previewRef.current?.getChartInstance();
+      if (!chartInstance) throw new Error('Chart preview not ready');
 
-      const dataUrl = await toPng(exportContainer, {
-        quality: 1.0,
+      const echartsInstance = chartInstance.getEchartsInstance();
+      const dataUrl = echartsInstance.getDataURL({
+        type: 'png',
         pixelRatio: 2,
         backgroundColor: '#ffffff',
       });
