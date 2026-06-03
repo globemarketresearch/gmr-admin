@@ -38,7 +38,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
       subtextStyle: {
         fontSize: 14,
         color: '#111111',
-        fontWeight: '600',
+        fontWeight: 600,
         fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       },
     },
@@ -77,7 +77,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
             textStyle: {
               fontSize: 12,
               color: '#111111',
-              fontWeight: '600',
+              fontWeight: 600,
             },
           }
         : { show: false },
@@ -125,7 +125,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
         axisLabel: {
           color: '#111111',
           fontSize: 12,
-          fontWeight: '600',
+          fontWeight: 600,
         },
         splitLine: {
           show: false,
@@ -143,7 +143,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
         axisLabel: {
           color: '#111111',
           fontSize: 12,
-          fontWeight: '600',
+          fontWeight: 600,
           formatter: (value: number) => {
             const formatted = Number(value.toFixed(metadata.decimalPrecision));
             return formatted + (metadata.unitSuffix || '');
@@ -176,7 +176,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
         axisLabel: {
           color: '#111111',
           fontSize: 12,
-          fontWeight: '600',
+          fontWeight: 600,
           formatter: (value: number) => {
             const formatted = Number(value.toFixed(metadata.decimalPrecision));
             return formatted + (metadata.unitSuffix || '');
@@ -217,7 +217,7 @@ export function buildEChartsConfig(config: ChartBuilderConfig): EChartsOption {
         axisLabel: {
           color: '#111111',
           fontSize: 12,
-          fontWeight: '600',
+          fontWeight: 600,
         },
         splitLine: {
           show: false,
@@ -327,7 +327,7 @@ function buildSeriesConfig(
             formatter: '{b}',
             fontSize: 12,
             color: '#111111',
-            fontWeight: '600',
+            fontWeight: 600,
           },
           emphasis: {
             itemStyle: {
@@ -450,7 +450,7 @@ function buildSeriesConfig(
             formatter: '{b}',
             fontSize: 12,
             color: '#111111',
-            fontWeight: '600',
+            fontWeight: 600,
           },
           emphasis: {
             itemStyle: {
@@ -574,7 +574,7 @@ function buildSourceTextGraphic(sourceText: string) {
       fontSize: 11,
       fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       fill: '#111111',
-      fontWeight: '600',
+      fontWeight: 600,
     },
     z: 100,
   };
