@@ -12,8 +12,8 @@ import type {
 } from '@/lib/types/reports';
 
 interface TOCTextEditorProps {
-  value: TableOfContentsStructure;
-  onChange: (value: TableOfContentsStructure) => void;
+  value: TableOfContentsStructure | string;
+  onChange: (value: string) => void;
 }
 
 let globalIdCounter = 0;
@@ -113,25 +113,29 @@ export function tocToText(toc: TableOfContentsStructure): string {
   return lines.join('\n');
 }
 
+function getInitialText(value: TableOfContentsStructure | string): string {
+  if (typeof value === 'string') return value;
+  return tocToText(value);
+}
+
 export function TOCTextEditor({ value, onChange }: TOCTextEditorProps) {
   const [isMounted, setIsMounted] = useState(false);
-  const [textValue, setTextValue] = useState(() => tocToText(value));
+  const [textValue, setTextValue] = useState(() => getInitialText(value));
   const [parseError, setParseError] = useState<string | null>(null);
 
-  // Track the last TOC structure we pushed via onChange so we can distinguish
-  // between our own updates and external changes (e.g. "Generate from Template")
-  const lastPushedTOC = useRef<string>(JSON.stringify(value));
+  // Stable key to detect external updates (e.g. "Generate from Template")
+  const lastPushedRef = useRef<string>(getInitialText(value));
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Only sync text from the prop when the value was changed externally
+  // Sync text when value changes externally (e.g. generate from template)
   useEffect(() => {
-    const incoming = JSON.stringify(value);
-    if (incoming !== lastPushedTOC.current) {
-      lastPushedTOC.current = incoming;
-      setTextValue(tocToText(value));
+    const incoming = getInitialText(value);
+    if (incoming !== lastPushedRef.current) {
+      lastPushedRef.current = incoming;
+      setTextValue(incoming);
     }
   }, [value]);
 
@@ -145,18 +149,10 @@ export function TOCTextEditor({ value, onChange }: TOCTextEditorProps) {
 
   const handleTextChange = (newText: string) => {
     setTextValue(newText);
-
-    // Real-time parsing and validation
-    try {
-      const parsed = parseTextToTOC(newText);
-      // Record what we're pushing so the effect doesn't echo it back
-      lastPushedTOC.current = JSON.stringify(parsed);
-      onChange(parsed);
-      setParseError(null);
-    } catch (error) {
-      setParseError('Invalid format. Please check the guide below.');
-      console.error('TOC parse error:', error);
-    }
+    lastPushedRef.current = newText;
+    // Emit raw text — backend stores as-is; client parses on render
+    onChange(newText);
+    setParseError(null);
   };
 
   return (

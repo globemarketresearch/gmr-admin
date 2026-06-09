@@ -122,7 +122,7 @@ export const reportMetadataSchema = z.object({
 // The sections object is required, but all fields within it are optional strings
 export const reportSectionsSchema = z.object({
   marketDetails: z.string().optional(),
-  tableOfContents: tableOfContentsSchema.optional(), // Structured TOC validation
+  tableOfContents: z.union([tableOfContentsSchema, z.string()]).optional(), // Structured TOC (legacy) or raw text
   keyPlayers: z.array(keyPlayerSchema).optional(),
 });
 

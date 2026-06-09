@@ -36,37 +36,34 @@ function convertDateToRFC3339(dateString: string | undefined): string | undefine
 }
 
 /**
- * Converts TOC structure to JSON string for backend storage
- * @param toc Table of Contents structure
- * @returns JSON string
+ * Converts TOC structure or raw text to backend storage format.
+ * Raw text strings are stored as-is; structured objects are JSON-stringified.
  */
-function convertTOCToJson(toc?: TableOfContentsStructure): string {
-  if (!toc || !toc.chapters || toc.chapters.length === 0) {
-    return JSON.stringify({ chapters: [] });
-  }
+function convertTOCToJson(toc?: TableOfContentsStructure | string): string {
+  if (!toc) return JSON.stringify({ chapters: [] });
+  if (typeof toc === 'string') return toc;
+  if (!toc.chapters || toc.chapters.length === 0) return JSON.stringify({ chapters: [] });
   return JSON.stringify(toc);
 }
 
 /**
- * Converts JSON string TOC from backend to structured format
- * @param json JSON string from backend
- * @returns Structured TOC object
+ * Converts backend TOC storage to form value.
+ * JSON with {chapters:[]} shape → TableOfContentsStructure (legacy).
+ * Anything else → raw string (new format).
  */
-function convertTOCFromJson(json: string | undefined): TableOfContentsStructure {
+function convertTOCFromJson(json: string | undefined): TableOfContentsStructure | string {
   if (!json) return { chapters: [] };
 
   try {
     const parsed = JSON.parse(json);
-    // Validate that it has the expected structure
     if (parsed && typeof parsed === 'object' && Array.isArray(parsed.chapters)) {
-      return parsed;
+      return parsed as TableOfContentsStructure;
     }
-  } catch (error) {
-    console.error('Failed to parse TOC JSON:', error);
+  } catch {
+    // not JSON — treat as raw text
   }
 
-  // Return empty structure if parsing fails
-  return { chapters: [] };
+  return json;
 }
 
 /**

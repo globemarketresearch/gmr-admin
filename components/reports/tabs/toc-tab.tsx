@@ -8,10 +8,48 @@ import { FileText, List, Save, AlertCircle, Wand2, Eye, Edit3, Type } from 'luci
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { TOCViewer } from '../toc-viewer';
 import { TOCEditor } from '../toc-editor';
-import { TOCTextEditor } from '../toc-text-editor';
+import { TOCTextEditor, tocToText } from '../toc-text-editor';
 import { TOCGeneratorDialog } from '../toc-generator-dialog';
 import type { UseFormReturn } from 'react-hook-form';
-import type { ReportFormData } from '@/lib/types/reports';
+import type { ReportFormData, TableOfContentsStructure } from '@/lib/types/reports';
+
+/** Normalize raw-text TOC to structured format for visual/view modes */
+function normalizeToStructure(value: TableOfContentsStructure | string | undefined): TableOfContentsStructure {
+  if (!value) return { chapters: [] };
+  if (typeof value !== 'string') return value;
+
+  // Parse raw text into structure for backward-compat visual/view modes
+  const lines = value.split('\n');
+  const chapters: TableOfContentsStructure['chapters'] = [];
+  let currentChapter: TableOfContentsStructure['chapters'][0] | null = null;
+  let currentSection: TableOfContentsStructure['chapters'][0]['sections'][0] | null = null;
+  let id = 0;
+  const genId = () => `toc-${++id}`;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    const sub = trimmed.match(/^(\d+)\.(\d+)\.(\d+)\.?\s+(.+)$/);
+    if (sub && currentSection) {
+      currentSection.subsections.push({ id: genId(), title: sub[4] });
+      continue;
+    }
+    const sec = trimmed.match(/^(\d+)\.(\d+)\.?\s+(.+)$/);
+    if (sec && currentChapter) {
+      currentSection = { id: genId(), title: sec[3], subsections: [] };
+      currentChapter.sections.push(currentSection);
+      continue;
+    }
+    const ch = trimmed.match(/^(?:Chapter\s+)?(\d+)\.(?!\d)\s*(.+)$/i);
+    if (ch) {
+      currentChapter = { id: genId(), title: ch[2], sections: [] };
+      currentSection = null;
+      chapters.push(currentChapter);
+    }
+  }
+
+  return { chapters };
+}
 
 type TOCMode = 'view' | 'visual-edit' | 'text-edit';
 
@@ -134,16 +172,18 @@ export function TOCTab({ form, onSaveTab, isSaving }: TOCTabProps) {
                     'Edit your table of contents using the visual editor. Add, remove, or reorder chapters, sections, and subsections.'}
                 </FormDescription>
                 <div>
-                  {tocMode === 'view' && <TOCViewer value={field.value || { chapters: [] }} />}
+                  {tocMode === 'view' && (
+                    <TOCViewer value={normalizeToStructure(field.value)} />
+                  )}
                   {tocMode === 'text-edit' && (
                     <TOCTextEditor
-                      value={field.value || { chapters: [] }}
+                      value={field.value || ''}
                       onChange={value => field.onChange(value)}
                     />
                   )}
                   {tocMode === 'visual-edit' && (
                     <TOCEditor
-                      value={field.value || { chapters: [] }}
+                      value={normalizeToStructure(field.value)}
                       onChange={value => field.onChange(value)}
                     />
                   )}
@@ -156,9 +196,9 @@ export function TOCTab({ form, onSaveTab, isSaving }: TOCTabProps) {
             open={tocDialogOpen}
             onOpenChange={setTocDialogOpen}
             reportTitle={form.watch('title')}
-            currentTOC={form.watch('sections.tableOfContents') || { chapters: [] }}
+            currentTOC={normalizeToStructure(form.watch('sections.tableOfContents'))}
             onImport={toc => {
-              form.setValue('sections.tableOfContents', toc);
+              form.setValue('sections.tableOfContents', tocToText(toc));
               setTocDialogOpen(false);
             }}
           />

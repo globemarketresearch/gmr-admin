@@ -48,7 +48,7 @@ export interface ReportSectionMeta {
 // Report sections (HTML content)
 export interface ReportSections {
   marketDetails?: string;
-  tableOfContents?: TableOfContentsStructure; // Structured TOC
+  tableOfContents?: TableOfContentsStructure | string; // Structured TOC (legacy) or raw text
   keyPlayers?: KeyPlayer[]; // Array of key market players
 }
 
