@@ -1,10 +1,10 @@
 'use client';
 
-import { Bell, Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { UserNav } from './user-nav';
+import { NotificationPanel } from './notification-panel';
 
 export function Header() {
   return (
@@ -18,13 +18,7 @@ export function Header() {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-4 w-4" />
-          <span className="absolute right-1 top-1 flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500"></span>
-          </span>
-        </Button>
+        <NotificationPanel />
         <ThemeToggle />
         <UserNav />
       </div>
