@@ -15,7 +15,6 @@ import {
   Users,
   TrendingUp,
   MessageSquare,
-  Image,
   RefreshCw,
   Megaphone,
 } from 'lucide-react';
@@ -38,13 +37,6 @@ export default function DashboardPage() {
       description: 'Publish a new statistic article',
       icon: PenSquare,
       href: '/statistics/new',
-      roles: ['admin', 'editor'],
-    },
-    {
-      title: 'Upload Media',
-      description: 'Add images and charts',
-      icon: Image,
-      href: '/media',
       roles: ['admin', 'editor'],
     },
     {
