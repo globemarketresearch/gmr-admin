@@ -12,6 +12,7 @@ import {
   ArrowRightLeft,
   ShoppingCart,
   ScrollText,
+  Newspaper,
 } from 'lucide-react';
 
 export type UserRole = 'admin' | 'editor' | 'viewer';
@@ -175,6 +176,12 @@ export const navigationItems: NavigationItem[] = [
     title: 'Research Team',
     href: '/authors',
     icon: Users,
+    roles: ['admin', 'editor'],
+  },
+  {
+    title: 'Media Mentions',
+    href: '/media-mentions',
+    icon: Newspaper,
     roles: ['admin', 'editor'],
   },
   {
