@@ -8,7 +8,11 @@ import type {
   LogoConfig,
   AxisLabelDisplay,
 } from '@/lib/types/chart-generator';
-import { MAP_COLOR_SCHEMES } from '@/lib/config/chart-generator';
+import {
+  MAP_COLOR_SCHEMES,
+  BRAND_COLORS,
+  applyGradedPieColors,
+} from '@/lib/config/chart-generator';
 
 interface ChartBuilderConfig {
   chartType: ChartType;
@@ -316,7 +320,7 @@ function buildSeriesConfig(
           type: 'pie',
           radius: ['40%', '70%'], // Inner and outer radius for donut
           center: ['50%', '50%'],
-          data: aggregatedData,
+          data: applyGradedPieColors(aggregatedData),
           itemStyle: {
             borderRadius: 8,
             borderColor: '#ffffff',
@@ -345,7 +349,7 @@ function buildSeriesConfig(
         type: 'pie',
         radius: ['40%', '70%'], // Key difference: inner radius creates donut hole
         center: ['50%', '50%'],
-        data: donutData,
+        data: applyGradedPieColors(donutData),
         itemStyle: {
           borderRadius: 8,
           borderColor: '#ffffff',
@@ -440,7 +444,7 @@ function buildSeriesConfig(
           type: 'pie',
           radius: ['0%', '65%'],
           center: ['50%', '50%'],
-          data: aggregatedData,
+          data: applyGradedPieColors(aggregatedData),
           itemStyle: {
             borderRadius: 5,
             borderColor: '#ffffff',
@@ -469,7 +473,7 @@ function buildSeriesConfig(
         type: 'pie',
         radius: ['0%', '65%'],
         center: ['50%', '50%'],
-        data: pieData,
+        data: applyGradedPieColors(pieData),
         itemStyle: {
           borderRadius: 5,
           borderColor: '#ffffff',
@@ -504,7 +508,7 @@ function buildSeriesConfig(
     data: series.values.map(val => Number(val.toFixed(metadata.decimalPrecision))),
     stack: chartType === 'stacked-bar' ? 'total' : undefined,
     itemStyle: {
-      color: series.color,
+      color: series.color || BRAND_COLORS.navy,
       borderRadius: orientation === 'vertical' ? [5, 5, 0, 0] : [0, 5, 5, 0],
     },
     label: {

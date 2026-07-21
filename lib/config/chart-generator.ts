@@ -7,17 +7,63 @@ import type {
   AxisLabelDisplay,
 } from '@/lib/types/chart-generator';
 
-// Professional color palette (muted, market-research grade)
+// GMR brand colors sampled from the logo
+export const BRAND_COLORS = {
+  navy: '#042F5A', // The "G" in the GMR logo
+  cyan: '#00BDD1', // The "M" in the GMR logo
+};
+
+// Professional color palette (brand-led, market-research grade)
 export const DEFAULT_CHART_COLORS = [
-  '#210086', // Deep indigo
-  '#7FC9A0', // Soft green
-  '#F4A261', // Warm orange
-  '#E76F51', // Terracotta
-  '#8E7CC3', // Lavender
-  '#6A9FB5', // Steel blue
-  '#C9ADA7', // Dusty rose
-  '#9A8C98', // Mauve
+  '#042F5A', // GMR navy (logo "G")
+  '#00BDD1', // GMR cyan (logo "M")
+  '#135A96', // Mid navy
+  '#2A76B4', // Steel blue
+  '#0E7C8B', // Deep teal
+  '#5495CB', // Light steel blue
+  '#85B4DC', // Pale blue
+  '#B0CFEA', // Mist blue
 ];
+
+/**
+ * Graded shades of the logo "G" navy, darkest first.
+ * Pie/donut segments are ranked by value so the largest share gets the
+ * darkest shade and progressively smaller shares get lighter ones.
+ */
+export const PIE_GRADED_COLORS = [
+  '#042F5A',
+  '#0B4478',
+  '#135A96',
+  '#2A76B4',
+  '#5495CB',
+  '#85B4DC',
+  '#B0CFEA',
+  '#D6E6F5',
+];
+
+/**
+ * Assigns graded navy shades to pie/donut data: the segment with the highest
+ * value gets the darkest shade, then progressively lighter shades.
+ */
+export function applyGradedPieColors<T extends { value: number; name: string }>(
+  data: T[]
+): (T & { itemStyle: { color: string } })[] {
+  const rankByIndex = new Map<number, number>();
+  data
+    .map((item, index) => ({ index, value: item.value }))
+    .sort((a, b) => b.value - a.value)
+    .forEach((entry, rank) => rankByIndex.set(entry.index, rank));
+
+  return data.map((item, index) => {
+    const rank = rankByIndex.get(index) ?? index;
+    return {
+      ...item,
+      itemStyle: {
+        color: PIE_GRADED_COLORS[Math.min(rank, PIE_GRADED_COLORS.length - 1)],
+      },
+    };
+  });
+}
 
 // Choropleth color schemes for world maps
 export const MAP_COLOR_SCHEMES = {
