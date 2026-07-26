@@ -26,7 +26,7 @@ const mediaMentionFormSchema = z
     link: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
     imageUrl: z.string().optional(),
     displayOrder: z.number().optional(),
-    reportId: z.number().optional(),
+    reportId: z.number().nullable().optional(),
     reportLinkText: z.string().optional(),
   })
   .superRefine((data, ctx) => {
@@ -169,7 +169,7 @@ export function MediaMentionForm({ mediaMention, onSubmit, isSaving }: MediaMent
                       value={field.value}
                       initialLabel={mediaMention?.reportTitle}
                       onChange={report => {
-                        field.onChange(report ? report.id : undefined);
+                        field.onChange(report ? report.id : null);
                         form.setValue('reportLinkText', report ? report.title : '', {
                           shouldValidate: true,
                         });

@@ -16,7 +16,7 @@ import { fetchLinkSuggestions, type LinkSuggestionItem } from '@/lib/api/reports
 import { cn } from '@/lib/utils';
 
 interface ReportSelectorProps {
-  value?: number;
+  value?: number | null;
   onChange: (report: LinkSuggestionItem | null) => void;
   initialLabel?: string;
   disabled?: boolean;

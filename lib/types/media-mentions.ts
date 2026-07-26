@@ -6,7 +6,7 @@ export interface MediaMention {
   link?: string;
   imageUrl?: string;
   displayOrder: number;
-  reportId?: number;
+  reportId?: number | null;
   reportLinkText?: string;
   reportSlug?: string;
   reportTitle?: string;
@@ -19,7 +19,7 @@ export interface MediaMentionFormData {
   link?: string;
   imageUrl?: string;
   displayOrder?: number;
-  reportId?: number;
+  reportId?: number | null;
   reportLinkText?: string;
 }
 
