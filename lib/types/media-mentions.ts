@@ -6,6 +6,10 @@ export interface MediaMention {
   link?: string;
   imageUrl?: string;
   displayOrder: number;
+  reportId?: number;
+  reportLinkText?: string;
+  reportSlug?: string;
+  reportTitle?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -15,6 +19,8 @@ export interface MediaMentionFormData {
   link?: string;
   imageUrl?: string;
   displayOrder?: number;
+  reportId?: number;
+  reportLinkText?: string;
 }
 
 export interface MediaMentionsResponse extends ApiResponse<MediaMention[]> {
