@@ -26,6 +26,7 @@ const authorFormSchema = z.object({
   bio: z.string().optional(),
   imageUrl: z.string().optional(),
   linkedinUrl: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+  xUrl: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
 });
 
 interface AuthorFormProps {
@@ -44,6 +45,7 @@ export function AuthorForm({ author, onSubmit, isSaving }: AuthorFormProps) {
           bio: author.bio || '',
           imageUrl: author.imageUrl || '',
           linkedinUrl: author.linkedinUrl || '',
+          xUrl: author.xUrl || '',
         }
       : {
           name: '',
@@ -51,6 +53,7 @@ export function AuthorForm({ author, onSubmit, isSaving }: AuthorFormProps) {
           bio: '',
           imageUrl: '',
           linkedinUrl: '',
+          xUrl: '',
         },
   });
 
@@ -153,6 +156,25 @@ export function AuthorForm({ author, onSubmit, isSaving }: AuthorFormProps) {
                     />
                   </FormControl>
                   <FormDescription>LinkedIn profile URL (optional)</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="xUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>X (Twitter) Profile</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="https://x.com/username"
+                      type="url"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>X (Twitter) profile URL (optional)</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

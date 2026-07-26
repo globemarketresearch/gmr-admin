@@ -71,6 +71,7 @@ export interface ReportAuthor {
   bio?: string;
   imageUrl?: string;
   linkedinUrl?: string;
+  xUrl?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -292,6 +293,7 @@ export interface AuthorFormData {
   bio?: string;
   imageUrl?: string;
   linkedinUrl?: string;
+  xUrl?: string;
 }
 
 // Authors API Response
