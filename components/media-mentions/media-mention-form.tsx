@@ -18,13 +18,36 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Save } from 'lucide-react';
 import type { MediaMention, MediaMentionFormData } from '@/lib/types/media-mentions';
 import { ImageUpload } from './image-upload';
+import { ReportSelector } from './report-selector';
 
-const mediaMentionFormSchema = z.object({
-  title: z.string().min(2, 'Title must be at least 2 characters'),
-  link: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
-  imageUrl: z.string().optional(),
-  displayOrder: z.number().optional(),
-});
+const mediaMentionFormSchema = z
+  .object({
+    title: z.string().min(2, 'Title must be at least 2 characters'),
+    link: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+    imageUrl: z.string().optional(),
+    displayOrder: z.number().optional(),
+    reportId: z.number().optional(),
+    reportLinkText: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    const hasReport = data.reportId !== undefined && data.reportId !== null;
+    const hasLinkText = !!data.reportLinkText;
+
+    if (hasReport && !hasLinkText) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Report link text is required when a report is selected',
+        path: ['reportLinkText'],
+      });
+    }
+    if (hasLinkText && !hasReport) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Select a report to go with this link text',
+        path: ['reportId'],
+      });
+    }
+  });
 
 interface MediaMentionFormProps {
   mediaMention?: MediaMention;
@@ -41,12 +64,16 @@ export function MediaMentionForm({ mediaMention, onSubmit, isSaving }: MediaMent
           link: mediaMention.link || '',
           imageUrl: mediaMention.imageUrl || '',
           displayOrder: mediaMention.displayOrder ?? 0,
+          reportId: mediaMention.reportId,
+          reportLinkText: mediaMention.reportLinkText || '',
         }
       : {
           title: '',
           link: '',
           imageUrl: '',
           displayOrder: 0,
+          reportId: undefined,
+          reportLinkText: '',
         },
   });
 
@@ -126,6 +153,51 @@ export function MediaMentionForm({ mediaMention, onSubmit, isSaving }: MediaMent
                     />
                   </FormControl>
                   <FormDescription>Lower numbers appear first (optional)</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="reportId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Related Report</FormLabel>
+                  <FormControl>
+                    <ReportSelector
+                      value={field.value}
+                      initialLabel={mediaMention?.reportTitle}
+                      onChange={report => {
+                        field.onChange(report ? report.id : undefined);
+                        form.setValue('reportLinkText', report ? report.title : '', {
+                          shouldValidate: true,
+                        });
+                      }}
+                      disabled={isSaving}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Optional — link this mention to one of your published reports
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="reportLinkText"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Report Link Text</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Global VFX Market" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Auto-filled from the report title when you select one above — edit for a custom
+                    caption
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
