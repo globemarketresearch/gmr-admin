@@ -557,13 +557,27 @@ function buildLogoGraphic(logo: LogoConfig) {
     'bottom-right': { right: 20, bottom: 20 },
   };
 
+  // Fit the logo into a bounding box without stretching it. Square logos
+  // (the common case) render at maxHeight x maxHeight instead of being
+  // forced into a wide rectangle.
+  const maxWidth = 80;
+  const maxHeight = 50;
+  const ratio = logo.aspectRatio && logo.aspectRatio > 0 ? logo.aspectRatio : 1;
+
+  let width = maxWidth;
+  let height = width / ratio;
+  if (height > maxHeight) {
+    height = maxHeight;
+    width = height * ratio;
+  }
+
   return {
     type: 'image',
     ...positions[logo.position],
     style: {
       image: logo.previewUrl || '',
-      width: 100,
-      height: 40,
+      width,
+      height,
       opacity: logo.opacity / 100,
     },
     z: 100,

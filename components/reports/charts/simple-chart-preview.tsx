@@ -10,6 +10,7 @@ import type { ReportChart } from '@/lib/types/reports';
 import { buildEChartsConfig } from '@/lib/utils/chart-builder';
 import worldMapData from '@/lib/data/world-map.json';
 import type { DataSource } from '@/lib/types/chart-generator';
+import { useImageAspectRatio } from '@/hooks/use-image-aspect-ratio';
 
 const ReactECharts = dynamic(() => import('echarts-for-react'), {
   ssr: false,
@@ -44,6 +45,7 @@ export const SimpleChartPreview = forwardRef<SimpleChartPreviewRef, SimpleChartP
   ({ chart, width = 1200, height = 400 }, ref) => {
     const chartRef = useRef<ReactEChartsCore>(null);
     const exportContainerRef = useRef<HTMLDivElement>(null);
+    const logoAspectRatio = useImageAspectRatio(chart.logoUrl);
 
     const chartOption: EChartsOption = useMemo(() => {
       const dataSource: DataSource = {
@@ -72,9 +74,10 @@ export const SimpleChartPreview = forwardRef<SimpleChartPreviewRef, SimpleChartP
           previewUrl: chart.logoUrl || null, // Pass logo URL
           position: chart.logoPosition || 'top-right', // Pass position
           opacity: chart.logoOpacity ?? 80, // Pass opacity
+          aspectRatio: logoAspectRatio,
         },
       });
-    }, [chart]);
+    }, [chart, logoAspectRatio]);
 
     useImperativeHandle(ref, () => ({
       getChartInstance: () => chartRef.current,

@@ -7,6 +7,7 @@ import type { EChartsOption } from 'echarts';
 import type ReactEChartsCore from 'echarts-for-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useChartGenerator } from '@/hooks/use-chart-generator';
+import { useImageAspectRatio } from '@/hooks/use-image-aspect-ratio';
 import { buildEChartsConfig } from '@/lib/utils/chart-builder';
 import worldMapData from '@/lib/data/world-map.json';
 
@@ -43,6 +44,7 @@ export const ChartPreview = forwardRef<ChartPreviewRef, ChartPreviewProps>(
     const chartRef = useRef<ReactEChartsCore>(null);
     const exportContainerRef = useRef<HTMLDivElement>(null);
     const { chartConfig, metadata, dataSource, logo } = useChartGenerator();
+    const logoAspectRatio = useImageAspectRatio(logo.previewUrl);
 
     const chartOption: EChartsOption = useMemo(() => {
       return buildEChartsConfig({
@@ -50,9 +52,9 @@ export const ChartPreview = forwardRef<ChartPreviewRef, ChartPreviewProps>(
         orientation: chartConfig.orientation,
         metadata,
         dataSource,
-        logo,
+        logo: { ...logo, aspectRatio: logoAspectRatio },
       });
-    }, [chartConfig, metadata, dataSource, logo]);
+    }, [chartConfig, metadata, dataSource, logo, logoAspectRatio]);
 
     // Expose methods to parent
     useImperativeHandle(ref, () => ({

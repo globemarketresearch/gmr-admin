@@ -53,6 +53,7 @@ export interface LogoConfig {
   previewUrl: string | null;
   position: LogoPosition;
   opacity: number; // 0-100
+  aspectRatio?: number | null; // naturalWidth / naturalHeight, used to avoid stretching
 }
 
 export interface ChartConfig {
