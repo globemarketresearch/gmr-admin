@@ -135,10 +135,14 @@ export function IndustryNewsForm({
 
     (async () => {
       try {
-        const response = await fetchAuthors();
+        const response = await fetchAuthors({ search: INDUSTRY_NEWS_DEFAULT_AUTHOR_NAME });
         const defaultAuthor = response.data.find(a => a.name === INDUSTRY_NEWS_DEFAULT_AUTHOR_NAME);
         if (defaultAuthor && !form.getValues('authorId')) {
           form.setValue('authorId', defaultAuthor.id);
+        } else if (!defaultAuthor) {
+          console.warn(
+            `Default author "${INDUSTRY_NEWS_DEFAULT_AUTHOR_NAME}" not found; leaving author unselected.`
+          );
         }
       } catch (error) {
         console.error('Failed to load default author:', error);

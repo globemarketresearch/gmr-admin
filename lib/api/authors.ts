@@ -2,10 +2,15 @@ import { apiClient } from './client';
 import type { AuthorFormData, AuthorsResponse, AuthorResponse } from '@/lib/types/reports';
 
 /**
- * Fetches all authors
+ * Fetches authors, optionally filtered/paginated via query params
+ * (e.g. `search`, `page`, `limit`).
  */
-export async function fetchAuthors(): Promise<AuthorsResponse> {
-  return apiClient.get<AuthorsResponse>('/v1/authors');
+export async function fetchAuthors(params?: {
+  search?: string;
+  page?: number;
+  limit?: number;
+}): Promise<AuthorsResponse> {
+  return apiClient.get<AuthorsResponse>('/v1/authors', { params });
 }
 
 /**
@@ -42,10 +47,7 @@ export async function deleteAuthor(id: number | string): Promise<void> {
 /**
  * Uploads an author profile image
  */
-export async function uploadAuthorImage(
-  id: number | string,
-  file: File
-): Promise<AuthorResponse> {
+export async function uploadAuthorImage(id: number | string, file: File): Promise<AuthorResponse> {
   const formData = new FormData();
   formData.append('image', file);
   return apiClient.upload<AuthorResponse>(`/v1/authors/${id}/image`, formData);
