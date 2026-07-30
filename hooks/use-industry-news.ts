@@ -62,7 +62,9 @@ export function useIndustryNews(): UseIndustryNewsReturn {
         const response = id ? await updateIndustryNews(id, data) : await createIndustryNews(data);
 
         setIndustryNews(response.industryNews);
-        toast.success(id ? 'Industry news updated successfully' : 'Industry news created successfully');
+        toast.success(
+          id ? 'Industry news updated successfully' : 'Industry news created successfully'
+        );
 
         if (!id) {
           router.push(`/industry-news/${response.industryNews.id}`);

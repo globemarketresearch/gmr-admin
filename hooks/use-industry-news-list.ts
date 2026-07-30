@@ -22,7 +22,9 @@ interface UseIndustryNewsListReturn {
   restore: (id: number) => Promise<void>;
 }
 
-export function useIndustryNewsList(initialFilters?: IndustryNewsFilters): UseIndustryNewsListReturn {
+export function useIndustryNewsList(
+  initialFilters?: IndustryNewsFilters
+): UseIndustryNewsListReturn {
   const [industryNewsItems, setIndustryNewsItems] = useState<IndustryNews[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
