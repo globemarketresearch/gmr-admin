@@ -13,6 +13,7 @@ import {
   ShoppingCart,
   ScrollText,
   Newspaper,
+  Rss,
 } from 'lucide-react';
 
 export type UserRole = 'admin' | 'editor' | 'viewer';
@@ -105,6 +106,32 @@ export const navigationItems: NavigationItem[] = [
       {
         title: 'Trash',
         href: '/press-releases/trash',
+        icon: Trash2,
+        roles: ['admin', 'editor'],
+      },
+    ],
+  },
+  {
+    title: 'Industry News',
+    href: '/industry-news',
+    icon: Rss,
+    roles: ['admin', 'editor'],
+    children: [
+      {
+        title: 'All Industry News',
+        href: '/industry-news',
+        icon: Rss,
+        roles: ['admin', 'editor'],
+      },
+      {
+        title: 'Create Industry News',
+        href: '/industry-news/new',
+        icon: Rss,
+        roles: ['admin', 'editor'],
+      },
+      {
+        title: 'Trash',
+        href: '/industry-news/trash',
         icon: Trash2,
         roles: ['admin', 'editor'],
       },
