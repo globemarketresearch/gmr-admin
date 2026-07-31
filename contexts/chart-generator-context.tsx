@@ -266,12 +266,12 @@ export function ChartGeneratorProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const removeLogo = useCallback(() => {
-    if (logo.previewUrl) {
+    if (logo.file && logo.previewUrl) {
       URL.revokeObjectURL(logo.previewUrl);
     }
-    setLogo(DEFAULT_LOGO_CONFIG);
+    setLogo(prev => ({ ...prev, file: null, previewUrl: null, aspectRatio: null }));
     toast.success('Logo removed');
-  }, [logo.previewUrl]);
+  }, [logo.file, logo.previewUrl]);
 
   // General actions
   const resetConfiguration = useCallback(() => {

@@ -196,10 +196,10 @@ export const DEFAULT_CHART_CONFIG: ChartConfig = {
   colorTheme: 'default',
 };
 
-// Default logo configuration
+// Default logo configuration — uses the GMR brand logo unless the user uploads a different one
 export const DEFAULT_LOGO_CONFIG: LogoConfig = {
   file: null,
-  previewUrl: null,
+  previewUrl: '/assets/images/logo.png',
   position: 'top-right',
   opacity: 80,
 };
