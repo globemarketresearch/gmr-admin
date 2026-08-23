@@ -94,7 +94,7 @@ function generateDefaultChartData(reportData?: ReportFormData): ReportChart {
     showGridlines: true,
     axisLabelDisplay: 'first-second-last',
     source: 'www.globemarketresearch.com', // POC default
-    logoUrl: undefined, // No logo by default
+    logoUrl: '/assets/images/logo.png', // GMR logo by default
     logoPosition: 'top-right', // Default position
     logoOpacity: 80, // Default opacity
     data: {
@@ -123,6 +123,7 @@ export function SimpleChartBuilder({
       return {
         ...chart,
         source: chart.source ?? 'www.globemarketresearch.com',
+        logoUrl: chart.logoUrl ?? '/assets/images/logo.png',
         logoPosition: chart.logoPosition ?? 'top-right',
         logoOpacity: chart.logoOpacity ?? 80,
         axisLabelDisplay: chart.axisLabelDisplay ?? 'first-second-last',
