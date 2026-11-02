@@ -413,6 +413,7 @@ export interface ApiOrder {
   report_id: number;
   report_title: string;
   report_slug: string;
+  license_type?: 'single' | 'corporate' | 'excel' | string;
   amount: number;
   currency: string;
   paypal_order_id?: string;

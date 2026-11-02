@@ -119,6 +119,14 @@ export function OrderDetail({ order, onStatusUpdate }: OrderDetailProps) {
                 <p className="text-muted-foreground mb-1">Title</p>
                 <p className="font-medium">{order.report_title}</p>
               </div>
+              {order.license_type && (
+                <div>
+                  <p className="text-muted-foreground mb-1">License</p>
+                  <p className="font-medium">
+                    {({ single: 'Single User License', corporate: 'Corporate User License', excel: 'Excel License' } as Record<string, string>)[order.license_type] ?? order.license_type}
+                  </p>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-muted-foreground mb-1">Amount</p>
