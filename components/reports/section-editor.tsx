@@ -4,12 +4,11 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { TiptapEditor } from './tiptap-editor';
-import { InternalLinkPanel } from '@/components/editor/internal-link-panel';
+import { AutoLinkReportsPanel } from '@/components/editor/auto-link-reports-panel';
 import { REPORT_SECTIONS } from '@/lib/config/reports';
 import type { ReportSectionKey, InternalLinkEntry } from '@/lib/types/reports';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import type { TiptapEditorLike } from '@/hooks/use-internal-link-keywords';
 
 interface SectionEditorProps {
   sections: any;
@@ -17,6 +16,13 @@ interface SectionEditorProps {
   reportId?: number | string;
   onInternalLinksChange?: (links: InternalLinkEntry[]) => void;
   initialLinks?: InternalLinkEntry[];
+  /** Settings for the "Auto-link reports" panel under Market Details. */
+  autoLink?: {
+    selfTitle?: string;
+    categoryId?: number | string | null;
+    /** Sync internal_links from the content on load (new reports) vs. only after use (older ones). */
+    syncOnLoad?: boolean;
+  };
 }
 
 export function SectionEditor({
@@ -25,11 +31,11 @@ export function SectionEditor({
   reportId,
   onInternalLinksChange,
   initialLinks,
+  autoLink,
 }: SectionEditorProps) {
   const [expandedSections, setExpandedSections] = useState<Set<ReportSectionKey>>(
     new Set(REPORT_SECTIONS.map(section => section.key))
   );
-  const [marketDetailsEditor, setMarketDetailsEditor] = useState<TiptapEditorLike | null>(null);
 
   const toggleSection = (key: ReportSectionKey) => {
     setExpandedSections(prev => {
@@ -89,18 +95,17 @@ export function SectionEditor({
                   onChange={content => handleSectionChange(section.key, content)}
                   placeholder={section.placeholder}
                   reportId={reportId}
-                  onEditorReady={
-                    section.key === 'marketDetails'
-                      ? ed => setMarketDetailsEditor(ed as TiptapEditorLike | null)
-                      : undefined
-                  }
                 />
                 {section.key === 'marketDetails' && (
-                  <InternalLinkPanel
-                    editor={marketDetailsEditor}
-                    onContentChange={content => handleSectionChange('marketDetails', content)}
+                  <AutoLinkReportsPanel
+                    html={(sections.marketDetails as string) || ''}
+                    onHtmlChange={content => handleSectionChange('marketDetails', content)}
                     onLinksChange={onInternalLinksChange}
                     initialLinks={initialLinks}
+                    excludeReportId={reportId}
+                    selfTitle={autoLink?.selfTitle}
+                    categoryId={autoLink?.categoryId}
+                    syncOnLoad={autoLink?.syncOnLoad ?? true}
                   />
                 )}
               </CardContent>

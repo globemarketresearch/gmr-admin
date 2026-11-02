@@ -29,6 +29,8 @@ export interface InternalLinkEntry {
   targetType: 'report' | 'blog' | 'press-release';
   targetUrl: string;
   linkedCount: number;
+  /** How the auto-linker matched it (exact, close, keyword, …); absent for manual links. */
+  matchType?: string;
 }
 
 // Report status enum

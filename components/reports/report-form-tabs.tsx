@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, forwardRef, useImperativeHandle } from 'react';
+import { isAutoLinkEligible } from '@/lib/config/auto-link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -347,6 +348,7 @@ export const ReportFormTabs = forwardRef<ReportFormTabsRef, ReportFormTabsProps>
               onSaveTab={onSaveTab}
               isSaving={isSaving}
               reportId={report?.id}
+              autoLinkSyncOnLoad={isAutoLinkEligible(report?.createdAt)}
             />
           </TabsContent>
 

@@ -44,8 +44,8 @@ import { measureTextWidth, SERP_FONTS } from '@/lib/utils/text-measurement';
 import { toast } from 'sonner';
 import { config } from '@/lib/config';
 import { generateSlug } from '@/lib/utils/slug';
-import { InternalLinkPanel } from '@/components/editor/internal-link-panel';
-import type { TiptapEditorLike } from '@/hooks/use-internal-link-keywords';
+import { AutoLinkReportsPanel } from '@/components/editor/auto-link-reports-panel';
+import { isAutoLinkEligible } from '@/lib/config/auto-link';
 
 interface PressReleaseFormProps {
   pressRelease?: PressRelease;
@@ -65,7 +65,6 @@ export function PressReleaseForm({
   const [keywordInput, setKeywordInput] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
-  const [contentEditor, setContentEditor] = useState<TiptapEditorLike | null>(null);
   const [internalLinks, setInternalLinks] = useState<InternalLinkEntry[]>(
     pressRelease?.internalLinks ?? []
   );
@@ -400,7 +399,6 @@ export function PressReleaseForm({
                       content={field.value}
                       onChange={field.onChange}
                       placeholder="Start writing your press release..."
-                      onEditorReady={ed => setContentEditor(ed as TiptapEditorLike | null)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -410,11 +408,13 @@ export function PressReleaseForm({
           </CardContent>
         </Card>
 
-        <InternalLinkPanel
-          editor={contentEditor}
-          onContentChange={html => form.setValue('content', html, { shouldDirty: true })}
+        <AutoLinkReportsPanel
+          html={form.watch('content') || ''}
+          onHtmlChange={html => form.setValue('content', html, { shouldDirty: true })}
           onLinksChange={setInternalLinks}
           initialLinks={pressRelease?.internalLinks ?? []}
+          categoryId={form.watch('categoryId')}
+          syncOnLoad={isAutoLinkEligible(pressRelease?.createdAt)}
         />
 
         {/* SEO Metadata */}

@@ -43,8 +43,8 @@ import { measureTextWidth, SERP_FONTS } from '@/lib/utils/text-measurement';
 import { toast } from 'sonner';
 import { config } from '@/lib/config';
 import { generateSlug } from '@/lib/utils/slug';
-import { InternalLinkPanel } from '@/components/editor/internal-link-panel';
-import type { TiptapEditorLike } from '@/hooks/use-internal-link-keywords';
+import { AutoLinkReportsPanel } from '@/components/editor/auto-link-reports-panel';
+import { isAutoLinkEligible } from '@/lib/config/auto-link';
 
 // Validation schema
 const statisticFormSchema = z.object({
@@ -98,7 +98,6 @@ export function StatisticsForm({
 }: StatisticsFormProps) {
   const [keywordInput, setKeywordInput] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
-  const [contentEditor, setContentEditor] = useState<TiptapEditorLike | null>(null);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [internalLinks, setInternalLinks] = useState<InternalLinkEntry[]>(
     statistic?.internalLinks ?? []
@@ -383,9 +382,7 @@ export function StatisticsForm({
                   <FormControl>
                     <Input placeholder="Enter location (e.g., New York, USA)" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Optional location field for the statistic post
-                  </FormDescription>
+                  <FormDescription>Optional location field for the statistic post</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -409,7 +406,6 @@ export function StatisticsForm({
                       content={field.value}
                       onChange={field.onChange}
                       placeholder="Start writing your statistic post..."
-                      onEditorReady={ed => setContentEditor(ed as TiptapEditorLike | null)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -419,11 +415,13 @@ export function StatisticsForm({
           </CardContent>
         </Card>
 
-        <InternalLinkPanel
-          editor={contentEditor}
-          onContentChange={html => form.setValue('content', html, { shouldDirty: true })}
+        <AutoLinkReportsPanel
+          html={form.watch('content') || ''}
+          onHtmlChange={html => form.setValue('content', html, { shouldDirty: true })}
           onLinksChange={setInternalLinks}
           initialLinks={statistic?.internalLinks ?? []}
+          categoryId={form.watch('categoryId')}
+          syncOnLoad={isAutoLinkEligible(statistic?.createdAt)}
         />
 
         {/* SEO Metadata */}

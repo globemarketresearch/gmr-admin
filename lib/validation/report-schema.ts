@@ -179,7 +179,7 @@ export const reportFormSchema = z
     // Admin Notes
     internalNotes: z.string().optional(),
 
-    // Internal links (managed by InternalLinkPanel, not directly editable)
+    // Internal links (managed by InternalLinkPanel / AutoLinkReportsPanel, not directly editable)
     internalLinks: z
       .array(
         z.object({
@@ -189,6 +189,7 @@ export const reportFormSchema = z
           targetType: z.enum(['report', 'blog', 'press-release']),
           targetUrl: z.string(),
           linkedCount: z.number(),
+          matchType: z.string().optional(),
         })
       )
       .optional()

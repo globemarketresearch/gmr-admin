@@ -164,6 +164,9 @@ export interface LinkSuggestionItem {
   title: string;
   slug: string;
   meta_keywords: string;
+  category_id?: number;
+  /** Public report URL, built by the backend from CLIENT_URL. */
+  url?: string;
 }
 
 /**

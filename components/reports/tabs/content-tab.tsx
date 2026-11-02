@@ -23,9 +23,19 @@ interface ContentTabProps {
   onSaveTab?: (tabKey: string, data: Partial<ReportFormData>) => Promise<void>;
   isSaving: boolean;
   reportId?: number | string;
+  /** New report → keep internal_links synced from content on load (older reports: only after use). */
+  autoLinkSyncOnLoad?: boolean;
 }
 
-export function ContentTab({ form, onSaveTab, isSaving, reportId }: ContentTabProps) {
+export function ContentTab({
+  form,
+  onSaveTab,
+  isSaving,
+  reportId,
+  autoLinkSyncOnLoad = true,
+}: ContentTabProps) {
+  const reportTitle = form.watch('title');
+  const reportCategoryId = form.watch('category_id');
   const [showValidationError, setShowValidationError] = useState(false);
   const playerInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const faqInputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -100,6 +110,11 @@ export function ContentTab({ form, onSaveTab, isSaving, reportId }: ContentTabPr
                     initialLinks={
                       form.getValues('internalLinks') as ReportFormData['internalLinks']
                     }
+                    autoLink={{
+                      selfTitle: reportTitle,
+                      categoryId: reportCategoryId,
+                      syncOnLoad: autoLinkSyncOnLoad,
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
